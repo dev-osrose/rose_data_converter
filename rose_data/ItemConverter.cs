@@ -76,6 +76,7 @@ namespace rose_data
 
             foreach (var itemDataFile in itemDataFiles)
             {
+                ++typeIdx;
                 var stringFile = new StringTableFile();
                 var dataFile = new DataFile();
 
