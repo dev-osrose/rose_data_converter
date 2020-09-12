@@ -266,7 +266,7 @@ namespace rose_data.Data
             set => _actionMode = value;
         }
         
-        public int[] RequiredWeapon { get; set; } = new int[5]; // this maps to the Item.SubType from the item stb
+        public int[] RequiredWeaponTypes { get; set; } = new int[5]; // this maps to the Item.SubType from the item stb
 
         public int IconNumber
         {
@@ -321,6 +321,8 @@ namespace rose_data.Data
             get => _availableClassSet;
             set => _availableClassSet = value;
         }
+        
+        public int[] AvailableUnions { get; set; } = new int[3]; // this maps to the Item.SubType from the item stb
 
         #endregion
 
@@ -377,7 +379,7 @@ namespace rose_data.Data
             {
                 int.TryParse(row[(31 + needWeaponIndex)], out var weapon);
 
-                RequiredWeapon[needWeaponIndex] = weapon;
+                RequiredWeaponTypes[needWeaponIndex] = weapon;
             }
             
             int.TryParse(row[36], out _availableClassSet); // This has something to do with LIST_CLASS.stb
@@ -385,18 +387,24 @@ namespace rose_data.Data
             for (var availableUnionIndex = 0; availableUnionIndex < 3; availableUnionIndex++)
             {
                 int.TryParse(row[(37 + availableUnionIndex)], out var availableUnion);
+
+                AvailableUnions[availableUnionIndex] = availableUnion;
             }
             
             for (var needSkillIndex = 0; needSkillIndex < 3; needSkillIndex++)
             {
                 int.TryParse(row[(40 + (needSkillIndex * 2))], out var skillIndex);
                 int.TryParse(row[(41 + (needSkillIndex * 2))], out var skillLevel);
+                
+                // RequiredLearnedSkills[needSkillIndex].Set(skillIndex, skillLevel);
             }
             
             for (var needAbilityIndex = 0; needAbilityIndex < 3; needAbilityIndex++)
             {
                 int.TryParse(row[(46 + (needAbilityIndex * 2))], out var abilityType);
                 int.TryParse(row[(47 + (needAbilityIndex * 2))], out var abilityValue);
+                
+                // RequiredStats[needAbilityIndex].Set(abilityType, abilityValue);
             }
 
             int.TryParse(row[52], out _iconNumber);
@@ -411,6 +419,8 @@ namespace rose_data.Data
                 int.TryParse(row[(57 + (castingEffectIndex * 3))], out var effect);
                 int.TryParse(row[(58 + (castingEffectIndex * 3))], out var effectPoint);
                 int.TryParse(row[(59 + (castingEffectIndex * 3))], out var sound);
+                
+                // CastingEffects[castingEffectIndex].Set(effect, effectPoint, sound);
             }
 
             int.TryParse(row[69], out _animationActionType);
