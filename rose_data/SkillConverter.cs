@@ -29,6 +29,13 @@ namespace rose_data
 {
     public class SkillConverter
     {
+        public SkillConverter(string rootDirectory)
+        {
+            const string skillStb = "list_skill.stb";
+            const string skillStl = "list_skill_s.stl";
+            LoadAndConvert(rootDirectory + skillStb, rootDirectory + skillStl);
+        }
+        
         public void LoadAndConvert(string stbPath = null, string stlPath = null)
         {
             if (stbPath == null || stlPath == null)
@@ -67,9 +74,10 @@ namespace rose_data
                 
                 sqlFileList.Add(skill);
             }
-
-            var jsonString = JsonConvert.SerializeObject(sqlFileList, Formatting.Indented);
-            // Console.WriteLine(jsonString);
+            
+            var jsonString = JsonConvert.SerializeObject(sqlFileList, Formatting.Indented,
+                new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate });
+            Console.WriteLine(jsonString);
         }
     }
 }

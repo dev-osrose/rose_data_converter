@@ -8,10 +8,8 @@ namespace rose_data
         
         static void Main(string[] args)
         {
-            const string skillStb = "list_skill.stb";
-            const string skillStl = "list_skill_s.stl";
-            var skillConverter = new SkillConverter();
-            skillConverter.LoadAndConvert(StbRoot + skillStb, StbRoot + skillStl);
+            var skillConverter = new SkillConverter(StbRoot);
+            var itemConverter = new ItemConverter(StbRoot);
         }
     }
 }
