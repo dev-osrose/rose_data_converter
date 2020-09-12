@@ -6,6 +6,46 @@ namespace rose_data.Data
 {
     public class Skill
     {
+        #region Structs
+
+        public struct UseAbility
+        {
+            public UseAbility(int type, int value) : this()
+            {
+                Set(type, value);
+            }
+
+            public void Set(int type, int value)
+            {
+                this.Type = type;
+                this.Value = value;
+            }
+
+            public int Type { get; set; }
+            public int Value { get; set; }
+        }
+
+        public struct IncreaseAbility
+        {
+            public IncreaseAbility(int type, int value, int rate) : this()
+            {
+                Set(type, value, rate);
+            }
+
+            public void Set(int type, int value, int rate)
+            {
+                this.Type = type;
+                this.Value = value;
+                this.Rate = rate;
+            }
+
+            public int Type { get; set; }
+            public int Value { get; set; }
+            public int Rate { get; set; }
+        }
+
+        #endregion
+
         #region Private Fields
 
         private int _id;
@@ -30,11 +70,14 @@ namespace rose_data.Data
         private int _summonPet;
         private int _actionMode;
         private int _iconNumber;
-        private int _animation;
-        private int _animationSpeed;
+        private int _animationCasting;
+        private int _animationCastingSpeed;
         private int _animationActionType;
         private int _animationActionSpeed;
         private int _animationHitCount;
+        private int _availableClassSet;
+        private int _repeatAnimationCasting;
+        private int _repeatAnimationCastingCount;
 
         #endregion
 
@@ -140,6 +183,10 @@ namespace rose_data.Data
             get => _power;
             set => _power = value;
         }
+        
+        public UseAbility[] StatsRequiredToUse { get; set; } = new UseAbility[2];
+
+        public IncreaseAbility[] StatsToBuff { get; set; } = new IncreaseAbility[2];
 
         public int Cooldown
         {
@@ -159,7 +206,7 @@ namespace rose_data.Data
             set => _zulyNeededToLevelUp = value;
         }
 
-        public int UsageAttribute
+        public int RideStateToUse
         {
             get => _usageAttribute;
             set => _usageAttribute = value;
@@ -218,6 +265,8 @@ namespace rose_data.Data
             get => _actionMode;
             set => _actionMode = value;
         }
+        
+        public int[] RequiredWeapon { get; set; } = new int[5]; // this maps to the Item.SubType from the item stb
 
         public int IconNumber
         {
@@ -225,16 +274,16 @@ namespace rose_data.Data
             set => _iconNumber = value;
         }
 
-        public int Animation
+        public int CastAnimation
         {
-            get => _animation;
-            set => _animation = value;
+            get => _animationCasting;
+            set => _animationCasting = value;
         }
 
-        public int AnimationSpeed
+        public int AnimationCastSpeed
         {
-            get => _animationSpeed;
-            set => _animationSpeed = value;
+            get => _animationCastingSpeed;
+            set => _animationCastingSpeed = value;
         }
 
         public int AnimationActionType
@@ -255,8 +304,26 @@ namespace rose_data.Data
             set => _animationHitCount = value;
         }
 
+        public int RepeatCastingAnimation
+        {
+            get => _repeatAnimationCasting;
+            set => _repeatAnimationCasting = value;
+        }
+
+        public int RepeatCastingAnimationCount
+        {
+            get => _repeatAnimationCastingCount;
+            set => _repeatAnimationCastingCount = value;
+        }
+
+        public int AvailableClassSet
+        {
+            get => _availableClassSet;
+            set => _availableClassSet = value;
+        }
+
         #endregion
-        
+
         public Skill(int id)
         {
             Id = id;
@@ -266,37 +333,90 @@ namespace rose_data.Data
         {
             _skillName = strTableRow.GetText();
             _skillDesc = strTableRow.GetDescription();
-            int type = 0;
-            
+
             int.TryParse(row[3], out _level);
             int.TryParse(row[4], out _pointsToLevelUp);
-            int.TryParse(row[6], out type);
+            int.TryParse(row[6], out var type);
             _type = (SkillType) type;
-            
+
             int.TryParse(row[7], out _range);
             int.TryParse(row[8], out _class);
             int.TryParse(row[10], out _power);
             int.TryParse(row[14], out _successRate);
             int.TryParse(row[15], out _duration);
             int.TryParse(row[16], out _damageType);
+
+            for (var useIndex = 0; useIndex < 2; useIndex++)
+            {
+                int.TryParse(row[(17 + (useIndex * 2))], out var reqType);
+                int.TryParse(row[(18 + (useIndex * 2))], out var reqValue);
+                
+                StatsRequiredToUse[useIndex].Set(reqType, reqValue);
+            }
+
+            for (var abilityIndex = 0; abilityIndex < 2; abilityIndex++)
+            {
+                int.TryParse(row[(22 + (abilityIndex * 3))], out var incAbility);
+                int.TryParse(row[(23 + (abilityIndex * 3))], out var incValue);
+                int.TryParse(row[(24 + (abilityIndex * 3))], out var incRate);
+                
+                StatsToBuff[abilityIndex].Set(incAbility, incValue, incRate);
+            }
+
             int.TryParse(row[21], out _cooldown);
-            
+
             int.TryParse(row[22], out _warpZoneNumber);
             int.TryParse(row[23], out _warpZoneXPosition);
             int.TryParse(row[24], out _warpZoneYPosition);
-            
+
             int.TryParse(row[28], out _reloadType);
             int.TryParse(row[29], out _summonPet);
             int.TryParse(row[30], out _actionMode);
             
-            int.TryParse(row[52], out _iconNumber);
-            int.TryParse(row[53], out _animation);
-            int.TryParse(row[54], out _animationSpeed);
+            for (var needWeaponIndex = 0; needWeaponIndex < 5; needWeaponIndex++)
+            {
+                int.TryParse(row[(31 + needWeaponIndex)], out var weapon);
+
+                RequiredWeapon[needWeaponIndex] = weapon;
+            }
             
+            int.TryParse(row[36], out _availableClassSet); // This has something to do with LIST_CLASS.stb
+            
+            for (var availableUnionIndex = 0; availableUnionIndex < 3; availableUnionIndex++)
+            {
+                int.TryParse(row[(37 + availableUnionIndex)], out var availableUnion);
+            }
+            
+            for (var needSkillIndex = 0; needSkillIndex < 3; needSkillIndex++)
+            {
+                int.TryParse(row[(40 + (needSkillIndex * 2))], out var skillIndex);
+                int.TryParse(row[(41 + (needSkillIndex * 2))], out var skillLevel);
+            }
+            
+            for (var needAbilityIndex = 0; needAbilityIndex < 3; needAbilityIndex++)
+            {
+                int.TryParse(row[(46 + (needAbilityIndex * 2))], out var abilityType);
+                int.TryParse(row[(47 + (needAbilityIndex * 2))], out var abilityValue);
+            }
+
+            int.TryParse(row[52], out _iconNumber);
+            int.TryParse(row[53], out _animationCasting);
+            int.TryParse(row[54], out _animationCastingSpeed);
+            
+            int.TryParse(row[55], out _repeatAnimationCasting);
+            int.TryParse(row[56], out _repeatAnimationCastingCount);
+            
+            for (var castingEffectIndex = 0; castingEffectIndex < 2; castingEffectIndex++)
+            {
+                int.TryParse(row[(57 + (castingEffectIndex * 3))], out var effect);
+                int.TryParse(row[(58 + (castingEffectIndex * 3))], out var effectPoint);
+                int.TryParse(row[(59 + (castingEffectIndex * 3))], out var sound);
+            }
+
             int.TryParse(row[69], out _animationActionType);
             int.TryParse(row[70], out _animationActionSpeed);
             int.TryParse(row[71], out _animationHitCount);
-            
+
             int.TryParse(row[86], out _zulyNeededToLevelUp);
             int.TryParse(row[87], out _usageAttribute);
         }
