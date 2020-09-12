@@ -46,9 +46,9 @@ namespace rose_data
                 this.StringFile = stringFile;
             }
         }
-        
+
         private ItemInfo[] itemDataFiles = new ItemInfo[14];
-        
+
         public ItemConverter(string rootDirectory)
         {
             itemDataFiles[00].set(rootDirectory + "list_faceitem.stb", rootDirectory + "list_faceitem_s.stl");
@@ -68,12 +68,12 @@ namespace rose_data
 
             LoadAndConvert();
         }
-        
+
         public void LoadAndConvert()
         {
             int typeIdx = 0;
             List<Item> sqlFileList = new List<Item>();
-            
+
             foreach (var itemDataFile in itemDataFiles)
             {
                 var stringFile = new StringTableFile();
@@ -92,7 +92,7 @@ namespace rose_data
                 {
                     continue;
                 }
-                
+
                 for (var i = 0; i < dataFile.RowCount; i++)
                 {
                     StringTableRow strTableRow;
@@ -105,7 +105,7 @@ namespace rose_data
                     {
                         continue;
                     }
-                    
+
                     var itemData = new Item(i, typeIdx);
                     itemData.Load(curRow, strTableRow);
 
@@ -114,8 +114,13 @@ namespace rose_data
             }
 
             var jsonString = JsonConvert.SerializeObject(sqlFileList, Formatting.Indented,
-                new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate });
-            Console.WriteLine(jsonString);
+                new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
+            
+            var sqlFile = new System.IO.StreamWriter("srv_data\\item_db.json", false);
+            using (sqlFile)
+            {
+                sqlFile.WriteLine(jsonString);
+            }
         }
     }
 }

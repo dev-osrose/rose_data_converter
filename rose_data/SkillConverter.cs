@@ -35,12 +35,12 @@ namespace rose_data
             const string skillStl = "list_skill_s.stl";
             LoadAndConvert(rootDirectory + skillStb, rootDirectory + skillStl);
         }
-        
+
         public void LoadAndConvert(string stbPath = null, string stlPath = null)
         {
             if (stbPath == null || stlPath == null)
                 return;
-            
+
             var stringFile = new StringTableFile();
             var dataFile = new DataFile();
 
@@ -52,7 +52,7 @@ namespace rose_data
             catch (FileNotFoundException e)
             {
                 Console.WriteLine(e);
-                throw;
+                return;
             }
 
             List<Skill> sqlFileList = new List<Skill>();
@@ -71,13 +71,18 @@ namespace rose_data
 
                 var skill = new Skill(i);
                 skill.Load(curRow, strTableRow);
-                
+
                 sqlFileList.Add(skill);
             }
-            
+
             var jsonString = JsonConvert.SerializeObject(sqlFileList, Formatting.Indented,
-                new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate });
-            Console.WriteLine(jsonString);
+                new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
+            
+            var sqlFile = new System.IO.StreamWriter("srv_data\\skill_db.json", false);
+            using (sqlFile)
+            {
+                sqlFile.WriteLine(jsonString);
+            }
         }
     }
 }
