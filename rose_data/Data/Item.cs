@@ -22,9 +22,8 @@ namespace rose_data.Data
                 this.Value = value;
             }
 
-            public int Value { get; set; }
-
             public int Type { get; set; }
+            public int Value { get; set; }
         }
 
         public struct Bonus
@@ -40,9 +39,8 @@ namespace rose_data.Data
                 this.Value = value;
             }
 
-            public int Value { get; set; }
-
             public int Type { get; set; }
+            public int Value { get; set; }
         }
 
         #endregion
@@ -242,9 +240,8 @@ namespace rose_data.Data
             Name = strTableRow.GetText();
             Description = strTableRow.GetDescription();
 
-            int usage = 0, type = 0;
-            int.TryParse(row[4], out usage);
-            int.TryParse(row[5], out type);
+            int.TryParse(row[4], out var usage);
+            int.TryParse(row[5], out var type);
             Usage = (ItemUsageRestrictions) usage;
             SubType = (ItemType) type;
 
@@ -260,19 +257,17 @@ namespace rose_data.Data
             {
                 for (var reqIndex = 0; reqIndex < 2; reqIndex++)
                 {
-                    int reqType = 0, reqValue = 0;
-                    int.TryParse(row[(20 + (reqIndex * 2))], out reqType);
-                    int.TryParse(row[(21 + (reqIndex * 2))], out reqValue);
-                    
+                    int.TryParse(row[(20 + (reqIndex * 2))], out var reqType);
+                    int.TryParse(row[(21 + (reqIndex * 2))], out var reqValue);
+
                     Requirements[reqIndex].Set(reqType, reqValue);
                 }
 
                 for (var bonusIndex = 0; bonusIndex < 2; bonusIndex++)
                 {
-                    int bonusType = 0, bonusValue = 0;
-                    int.TryParse(row[(25 + (bonusIndex * 3))], out bonusType);
-                    int.TryParse(row[(26 + (bonusIndex * 3))], out bonusValue);
-                    
+                    int.TryParse(row[(25 + (bonusIndex * 3))], out var bonusType);
+                    int.TryParse(row[(26 + (bonusIndex * 3))], out var bonusValue);
+
                     Bonuses[bonusIndex].Set(bonusType, bonusValue);
                 }
 
