@@ -44,6 +44,59 @@ namespace rose_data.Data
             public int Rate { get; set; }
         }
 
+        public struct RequiredSkill
+        {
+            public RequiredSkill(int id, int level) : this()
+            {
+                Set(id, level);
+            }
+
+            public void Set(int id, int level)
+            {
+                this.Id = id;
+                this.Level = level;
+            }
+
+            public int Id { get; set; }
+            public int Level { get; set; }
+        }
+
+        public struct RequiredStat
+        {
+            public RequiredStat(int type, int value) : this()
+            {
+                Set(type, value);
+            }
+
+            public void Set(int type, int value)
+            {
+                this.Type = type;
+                this.Value = value;
+            }
+
+            public int Type { get; set; }
+            public int Value { get; set; }
+        }
+        
+        public struct CastingEffect
+        {
+            public CastingEffect(int effect, int points, int sound) : this()
+            {
+                Set(effect, points, sound);
+            }
+
+            public void Set(int effect, int points, int sound)
+            {
+                this.EffectId = effect;
+                this.EffectPoints = points;
+                this.SoundEffect = sound;
+            }
+
+            public int EffectId { get; set; }
+            public int EffectPoints { get; set; }
+            public int SoundEffect { get; set; }
+        }
+
         #endregion
 
         #region Private Fields
@@ -183,7 +236,7 @@ namespace rose_data.Data
             get => _power;
             set => _power = value;
         }
-        
+
         public List<UseAbility> StatsRequiredToUse { get; set; } = new List<UseAbility>();
 
         public List<IncreaseAbility> StatsToBuff { get; set; } = new List<IncreaseAbility>();
@@ -265,8 +318,9 @@ namespace rose_data.Data
             get => _actionMode;
             set => _actionMode = value;
         }
-        
-        public List<int> RequiredWeaponTypes { get; set; } = new List<int>();// this maps to the Item.SubType from the item stb
+
+        public List<int> RequiredWeaponTypes { get; set; } =
+            new List<int>(); // this maps to the Item.SubType from the item stb
 
         public int IconNumber
         {
@@ -321,9 +375,16 @@ namespace rose_data.Data
             get => _availableClassSet;
             set => _availableClassSet = value;
         }
-        
-        public List<int> AvailableUnions { get; set; } = new List<int>(); // this maps to the Item.SubType from the item stb
 
+        public List<int> AvailableUnions { get; set; } =
+            new List<int>(); // this maps to the Item.SubType from the item stb
+
+        public List<RequiredSkill> RequiredLearnedSkills { get; set; } = new List<RequiredSkill>();
+        
+        public List<RequiredStat> RequiredStats { get; set; } = new List<RequiredStat>();
+        
+        public List<CastingEffect> CastingEffects { get; set; } = new List<CastingEffect>();
+        
         #endregion
 
         public Skill(int id)
@@ -347,25 +408,23 @@ namespace rose_data.Data
             int.TryParse(row[14], out _successRate);
             int.TryParse(row[15], out _duration);
             int.TryParse(row[16], out _damageType);
-            
+
             for (var useIndex = 0; useIndex < 2; useIndex++)
             {
                 int.TryParse(row[(17 + (useIndex * 2))], out var reqType);
                 int.TryParse(row[(18 + (useIndex * 2))], out var reqValue);
-                
+
                 if (reqType == 0) continue;
-                
                 StatsRequiredToUse.Add(new UseAbility(reqType, reqValue));
             }
-            
+
             for (var abilityIndex = 0; abilityIndex < 2; abilityIndex++)
             {
                 int.TryParse(row[(22 + (abilityIndex * 3))], out var incAbility);
                 int.TryParse(row[(23 + (abilityIndex * 3))], out var incValue);
                 int.TryParse(row[(24 + (abilityIndex * 3))], out var incRate);
-                
+
                 if (incAbility == 0) continue;
-                
                 StatsToBuff.Add(new IncreaseAbility(incAbility, incValue, incRate));
             }
 
@@ -378,7 +437,7 @@ namespace rose_data.Data
             int.TryParse(row[28], out _reloadType);
             int.TryParse(row[29], out _summonPet);
             int.TryParse(row[30], out _actionMode);
-            
+
             for (var needWeaponIndex = 0; needWeaponIndex < 5; needWeaponIndex++)
             {
                 int.TryParse(row[(31 + needWeaponIndex)], out var weapon);
@@ -386,50 +445,50 @@ namespace rose_data.Data
                 if (weapon == 0) continue;
                 RequiredWeaponTypes.Add(weapon);
             }
-            
+
             int.TryParse(row[36], out _availableClassSet); // This has something to do with LIST_CLASS.stb
-            
+
             for (var availableUnionIndex = 0; availableUnionIndex < 3; availableUnionIndex++)
             {
                 int.TryParse(row[(37 + availableUnionIndex)], out var availableUnion);
-                
+
                 if (availableUnion == 0) continue;
                 AvailableUnions.Add(availableUnion);
             }
-            
+
             for (var needSkillIndex = 0; needSkillIndex < 3; needSkillIndex++)
             {
                 int.TryParse(row[(40 + (needSkillIndex * 2))], out var skillIndex);
                 int.TryParse(row[(41 + (needSkillIndex * 2))], out var skillLevel);
-                
+
                 if (skillIndex == 0) continue;
-                // RequiredLearnedSkills[needSkillIndex].Set(skillIndex, skillLevel);
+                RequiredLearnedSkills.Add(new RequiredSkill(skillIndex, skillLevel));
             }
-            
+
             for (var needAbilityIndex = 0; needAbilityIndex < 3; needAbilityIndex++)
             {
                 int.TryParse(row[(46 + (needAbilityIndex * 2))], out var abilityType);
                 int.TryParse(row[(47 + (needAbilityIndex * 2))], out var abilityValue);
-                
+
                 if (abilityType == 0) continue;
-                // RequiredStats[needAbilityIndex].Set(abilityType, abilityValue);
+                RequiredStats.Add(new RequiredStat(abilityType, abilityValue));
             }
 
             int.TryParse(row[52], out _iconNumber);
             int.TryParse(row[53], out _animationCasting);
             int.TryParse(row[54], out _animationCastingSpeed);
-            
+
             int.TryParse(row[55], out _repeatAnimationCasting);
             int.TryParse(row[56], out _repeatAnimationCastingCount);
-            
+
             for (var castingEffectIndex = 0; castingEffectIndex < 2; castingEffectIndex++)
             {
                 int.TryParse(row[(57 + (castingEffectIndex * 3))], out var effect);
                 int.TryParse(row[(58 + (castingEffectIndex * 3))], out var effectPoint);
                 int.TryParse(row[(59 + (castingEffectIndex * 3))], out var sound);
-                
+
                 if (effect == 0) continue;
-                // CastingEffects[castingEffectIndex].Set(effect, effectPoint, sound);
+                CastingEffects.Add(new CastingEffect(effect, effectPoint, sound));
             }
 
             int.TryParse(row[69], out _animationActionType);
