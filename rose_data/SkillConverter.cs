@@ -33,7 +33,7 @@ namespace rose_data
         {
             const string skillStb = "list_skill.stb";
             const string skillStl = "list_skill_s.stl";
-            LoadAndConvert(rootDirectory + skillStb, rootDirectory + skillStl);
+            LoadAndConvert(rootDirectory + "\\STB\\" + skillStb, rootDirectory + "\\STB\\" + skillStl);
         }
 
         public void LoadAndConvert(string stbPath = null, string stlPath = null)
