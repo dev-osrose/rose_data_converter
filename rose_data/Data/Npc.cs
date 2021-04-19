@@ -329,7 +329,7 @@ namespace rose_data.Data
             set => _createSound = value;
         }
 
-        public const int NpcType = 999;
+        private const int NpcType = 999;
         
         public Npc(int id)
         {
@@ -384,7 +384,7 @@ namespace rose_data.Data
                 int.TryParse(row[26], out _canTarget);
                 int.TryParse(row[27], out _attackRange);
                 int.TryParse(row[29], out _hitMaterialType);
-                int.TryParse(row[30], out _summonMobType);    
+                int.TryParse(row[30], out _summonMobType);
             }
 
             int.TryParse(row[31], out _normalEffectSound);

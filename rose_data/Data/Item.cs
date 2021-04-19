@@ -7,8 +7,6 @@ namespace rose_data.Data
 {
     public class Item
     {
-        #region Structs
-
         public struct Requirement
         {
             public Requirement(int type, int value) : this()
@@ -42,10 +40,6 @@ namespace rose_data.Data
             public int Type { get; set; }
             public int Value { get; set; }
         }
-
-        #endregion
-
-        #region Private Fields
 
         private int _basePrice;
         private double _priceRate;
@@ -109,10 +103,6 @@ namespace rose_data.Data
         private int _bulletId;
         // end ItemType.Natural
 
-        #endregion
-
-        #region Enums
-
         public enum ItemType
         {
             Invalid = 0,
@@ -143,10 +133,6 @@ namespace rose_data.Data
             AllowBankStorage,
             MaxItemRestrictions
         }
-
-        #endregion
-
-        #region Properties
 
         public int Id { get; set; }
 
@@ -449,8 +435,6 @@ namespace rose_data.Data
             get => _bulletId;
             set => _bulletId = value;
         }
-
-        #endregion
 
         public Item(int id, int type)
         {

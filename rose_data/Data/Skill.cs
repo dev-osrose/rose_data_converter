@@ -6,8 +6,6 @@ namespace rose_data.Data
 {
     public class Skill
     {
-        #region Structs
-
         public struct UseAbility
         {
             public UseAbility(int type, int value) : this()
@@ -97,10 +95,6 @@ namespace rose_data.Data
             public int SoundEffect { get; set; }
         }
 
-        #endregion
-
-        #region Private Fields
-
         private int _id;
         private string _skillName;
         private string _skillDesc;
@@ -131,10 +125,6 @@ namespace rose_data.Data
         private int _availableClassSet;
         private int _repeatAnimationCasting;
         private int _repeatAnimationCastingCount;
-
-        #endregion
-
-        #region Enums
 
         public enum SkillType
         {
@@ -184,10 +174,6 @@ namespace rose_data.Data
             Attack,
             Restore
         }
-
-        #endregion
-
-        #region Properties
 
         public int Id
         {
@@ -385,8 +371,6 @@ namespace rose_data.Data
         
         public List<CastingEffect> CastingEffects { get; set; } = new List<CastingEffect>();
         
-        #endregion
-
         public Skill(int id)
         {
             Id = id;
@@ -417,6 +401,8 @@ namespace rose_data.Data
                 if (reqType == 0) continue;
                 StatsRequiredToUse.Add(new UseAbility(reqType, reqValue));
             }
+            
+            int.TryParse(row[21], out _cooldown);
 
             for (var abilityIndex = 0; abilityIndex < 2; abilityIndex++)
             {
@@ -428,11 +414,12 @@ namespace rose_data.Data
                 StatsToBuff.Add(new IncreaseAbility(incAbility, incValue, incRate));
             }
 
-            int.TryParse(row[21], out _cooldown);
-
-            int.TryParse(row[22], out _warpZoneNumber);
-            int.TryParse(row[23], out _warpZoneXPosition);
-            int.TryParse(row[24], out _warpZoneYPosition);
+            if (_type == SkillType.Warp)
+            {
+                int.TryParse(row[22], out _warpZoneNumber);
+                int.TryParse(row[23], out _warpZoneXPosition);
+                int.TryParse(row[24], out _warpZoneYPosition);
+            }
 
             int.TryParse(row[28], out _reloadType);
             int.TryParse(row[29], out _summonPet);
