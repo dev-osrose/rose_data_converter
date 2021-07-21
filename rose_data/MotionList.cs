@@ -22,64 +22,54 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using Revise.STB;
-using Revise.STL;
 using rose_data.Data;
 
 namespace rose_data
 {
-    public class SkillConverter
+    public class MotionList
     {
-        public SkillConverter(string rootDirectory)
+        public List<Motion> AnimationList { get; set; } = new List<Motion>();
+        
+        public MotionList(string rootDirectory)
         {
-            const string skillStb = "list_skill.stb";
-            const string skillStl = "list_skill_s.stl";
-            LoadAndConvert(rootDirectory + "\\3DDATA\\STB\\" + skillStb, rootDirectory + "\\3DDATA\\STB\\" + skillStl);
+            const string motionStb = "FILE_MOTION.stb";
+            LoadAndConvert(rootDirectory + "\\3DDATA\\STB\\" + motionStb);
         }
 
-        public void LoadAndConvert(string stbPath = null, string stlPath = null)
+        public Motion GetById(int id)
         {
-            if (stbPath == null || stlPath == null)
-                return;
+            return AnimationList.Find(motion => motion.Id == id);
+        }
 
-            var stringFile = new StringTableFile();
+        public void LoadAndConvert(string stbPath = null)
+        {
+            if (stbPath == null)
+                return;
+            
             var dataFile = new DataFile();
 
             try
             {
                 dataFile.Load(stbPath);
-                stringFile.Load(stlPath);
             }
             catch (FileNotFoundException e)
             {
                 Console.WriteLine(e);
                 return;
             }
-
-            List<Skill> sqlFileList = new List<Skill>();
-            for (var i = 0; i < dataFile.RowCount; i++)
+            
+            for (var i = 1; i < dataFile.RowCount; i++)
             {
-                StringTableRow strTableRow;
-                var curRow = dataFile[i];
-                try
-                {
-                    strTableRow = stringFile[curRow[(dataFile.ColumnCount - 1)]];
-                }
-                catch (ArgumentException)
-                {
-                    continue;
-                }
-
-                var skill = new Skill(i);
-                skill.Load(curRow, strTableRow);
-
-                sqlFileList.Add(skill);
+                var motion = new Motion(i);
+                var valid = motion.Load(dataFile[i]);
+                if (valid) AnimationList.Add(motion);
             }
 
-            var jsonString = JsonConvert.SerializeObject(sqlFileList, Formatting.Indented,
+            var jsonString = JsonConvert.SerializeObject(AnimationList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
             
-            (new FileInfo("srv_data\\skill_db.json")).Directory.Create();
-            var sqlFile = new System.IO.StreamWriter("srv_data\\skill_db.json", false);
+            (new FileInfo("srv_data\\motion_db.json")).Directory.Create();
+            var sqlFile = new System.IO.StreamWriter("srv_data\\motion_db.json", false);
             using (sqlFile)
             {
                 sqlFile.WriteLine(jsonString);

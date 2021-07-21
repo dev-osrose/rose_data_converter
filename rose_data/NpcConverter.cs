@@ -27,13 +27,13 @@ using rose_data.Data;
 
 namespace rose_data
 {
-    public class SkillConverter
+    public class NpcConverter
     {
-        public SkillConverter(string rootDirectory)
+        public NpcConverter(string rootDirectory)
         {
-            const string skillStb = "list_skill.stb";
-            const string skillStl = "list_skill_s.stl";
-            LoadAndConvert(rootDirectory + "\\3DDATA\\STB\\" + skillStb, rootDirectory + "\\3DDATA\\STB\\" + skillStl);
+            const string npcStb = "list_npc.stb";
+            const string npcStl = "list_npc_s.stl";
+            LoadAndConvert(rootDirectory + "\\3DDATA\\STB\\" + npcStb, rootDirectory + "\\3DDATA\\STB\\" + npcStl);
         }
 
         public void LoadAndConvert(string stbPath = null, string stlPath = null)
@@ -55,31 +55,31 @@ namespace rose_data
                 return;
             }
 
-            List<Skill> sqlFileList = new List<Skill>();
+            List<Npc> sqlFileList = new List<Npc>();
             for (var i = 0; i < dataFile.RowCount; i++)
             {
                 StringTableRow strTableRow;
                 var curRow = dataFile[i];
                 try
                 {
-                    strTableRow = stringFile[curRow[(dataFile.ColumnCount - 1)]];
+                    strTableRow = stringFile[curRow[41]];
                 }
                 catch (ArgumentException)
                 {
                     continue;
                 }
 
-                var skill = new Skill(i);
-                skill.Load(curRow, strTableRow);
+                var npc = new Npc(i);
+                npc.Load(curRow, strTableRow);
 
-                sqlFileList.Add(skill);
+                sqlFileList.Add(npc);
             }
 
             var jsonString = JsonConvert.SerializeObject(sqlFileList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
             
-            (new FileInfo("srv_data\\skill_db.json")).Directory.Create();
-            var sqlFile = new System.IO.StreamWriter("srv_data\\skill_db.json", false);
+            (new FileInfo("srv_data\\npc_db.json")).Directory.Create();
+            var sqlFile = new System.IO.StreamWriter("srv_data\\npc_db.json", false);
             using (sqlFile)
             {
                 sqlFile.WriteLine(jsonString);

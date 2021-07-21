@@ -51,20 +51,20 @@ namespace rose_data
 
         public ItemConverter(string rootDirectory)
         {
-            itemDataFiles[00].set(rootDirectory + "\\STB\\" + "list_faceitem.stb", rootDirectory + "\\STB\\" + "list_faceitem_s.stl");
-            itemDataFiles[01].set(rootDirectory + "\\STB\\" + "list_cap.stb", rootDirectory + "\\STB\\" + "list_cap_s.stl");
-            itemDataFiles[02].set(rootDirectory + "\\STB\\" + "list_body.stb", rootDirectory + "\\STB\\" + "list_body_s.stl");
-            itemDataFiles[03].set(rootDirectory + "\\STB\\" + "list_arms.stb", rootDirectory + "\\STB\\" + "list_arms_s.stl");
-            itemDataFiles[04].set(rootDirectory + "\\STB\\" + "list_foot.stb", rootDirectory + "\\STB\\" + "list_foot_s.stl");
-            itemDataFiles[05].set(rootDirectory + "\\STB\\" + "list_back.stb", rootDirectory + "\\STB\\" + "list_back_s.stl");
-            itemDataFiles[06].set(rootDirectory + "\\STB\\" + "list_jewel.stb", rootDirectory + "\\STB\\" + "list_jewel_s.stl");
-            itemDataFiles[07].set(rootDirectory + "\\STB\\" + "list_weapon.stb", rootDirectory + "\\STB\\" + "list_weapon_s.stl");
-            itemDataFiles[08].set(rootDirectory + "\\STB\\" + "list_subwpn.stb", rootDirectory + "\\STB\\" + "list_subwpn_s.stl");
-            itemDataFiles[09].set(rootDirectory + "\\STB\\" + "list_useitem.stb", rootDirectory + "\\STB\\" + "list_useitem_s.stl");
-            itemDataFiles[10].set(rootDirectory + "\\STB\\" + "list_jemitem.stb", rootDirectory + "\\STB\\" + "list_jemitem_s.stl");
-            itemDataFiles[11].set(rootDirectory + "\\STB\\" + "list_natural.stb", rootDirectory + "\\STB\\" + "list_natural_s.stl");
-            itemDataFiles[12].set(rootDirectory + "\\STB\\" + "list_questitem.stb", rootDirectory + "\\STB\\" + "list_questitem_s.stl");
-            itemDataFiles[13].set(rootDirectory + "\\STB\\" + "list_pat.stb", rootDirectory + "\\STB\\" + "list_pat_s.stl");
+            itemDataFiles[00].set(rootDirectory + "\\3DDATA\\STB\\" + "list_faceitem.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_faceitem_s.stl");
+            itemDataFiles[01].set(rootDirectory + "\\3DDATA\\STB\\" + "list_cap.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_cap_s.stl");
+            itemDataFiles[02].set(rootDirectory + "\\3DDATA\\STB\\" + "list_body.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_body_s.stl");
+            itemDataFiles[03].set(rootDirectory + "\\3DDATA\\STB\\" + "list_arms.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_arms_s.stl");
+            itemDataFiles[04].set(rootDirectory + "\\3DDATA\\STB\\" + "list_foot.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_foot_s.stl");
+            itemDataFiles[05].set(rootDirectory + "\\3DDATA\\STB\\" + "list_back.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_back_s.stl");
+            itemDataFiles[06].set(rootDirectory + "\\3DDATA\\STB\\" + "list_jewel.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_jewel_s.stl");
+            itemDataFiles[07].set(rootDirectory + "\\3DDATA\\STB\\" + "list_weapon.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_weapon_s.stl");
+            itemDataFiles[08].set(rootDirectory + "\\3DDATA\\STB\\" + "list_subwpn.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_subwpn_s.stl");
+            itemDataFiles[09].set(rootDirectory + "\\3DDATA\\STB\\" + "list_useitem.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_useitem_s.stl");
+            itemDataFiles[10].set(rootDirectory + "\\3DDATA\\STB\\" + "list_jemitem.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_jemitem_s.stl");
+            itemDataFiles[11].set(rootDirectory + "\\3DDATA\\STB\\" + "list_natural.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_natural_s.stl");
+            itemDataFiles[12].set(rootDirectory + "\\3DDATA\\STB\\" + "list_questitem.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_questitem_s.stl");
+            itemDataFiles[13].set(rootDirectory + "\\3DDATA\\STB\\" + "list_pat.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_pat_s.stl");
 
             LoadAndConvert();
         }

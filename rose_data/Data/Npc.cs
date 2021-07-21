@@ -160,6 +160,8 @@ namespace rose_data.Data
             get => _aiType;
             set => _aiType = value;
         }
+        
+        public string AiScript { get; set; }
 
         public int GiveExp
         {
@@ -356,6 +358,8 @@ namespace rose_data.Data
             int.TryParse(row[15], out _attackSpeed);
             int.TryParse(row[16], out _isMagicDamage);
             int.TryParse(row[17], out _aiType);
+            //TODO: Replace AiType with the path to the ai data script with the id that matches _aiType
+            //AiScript = Config.AiList.GetById(_aiType);
             int.TryParse(row[18], out _giveExp);
             
             int.TryParse(row[28], out _type);
