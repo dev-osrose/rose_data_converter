@@ -51,8 +51,7 @@ namespace rose_data
             var skillConverter = new SkillConverter(Config.RootDirectory);
             var itemConverter = new ItemConverter(Config.RootDirectory);
             var npcConverter = new NpcConverter(Config.RootDirectory);
-            // (new FileInfo("srv_data\\zone_db.json")).Directory.Create();
-            // var zoneConverter = new ZoneConverter(StbRoot);
+            var zoneConverter = new ZoneConverter(Config.RootDirectory);
             
 #if RELEASE
             Console.Write("Done extracting. Press any key to exit...\n");

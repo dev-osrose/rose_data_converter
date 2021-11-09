@@ -68,8 +68,8 @@ namespace rose_data
             var jsonString = JsonConvert.SerializeObject(AnimationList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
             
-            (new FileInfo("srv_data\\motion_db.json")).Directory.Create();
-            var sqlFile = new System.IO.StreamWriter("srv_data\\motion_db.json", false);
+            (new FileInfo("srv_data\\motion_ref.json")).Directory.Create();
+            var sqlFile = new System.IO.StreamWriter("srv_data\\motion_ref.json", false);
             using (sqlFile)
             {
                 sqlFile.WriteLine(jsonString);

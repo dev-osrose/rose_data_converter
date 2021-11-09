@@ -72,7 +72,7 @@ namespace rose_data
         public void LoadAndConvert()
         {
             int typeIdx = 0;
-            List<Item> sqlFileList = new List<Item>();
+            List<Item> itemList = new List<Item>();
 
             foreach (var itemDataFile in itemDataFiles)
             {
@@ -110,11 +110,11 @@ namespace rose_data
                     var itemData = new Item(i, typeIdx);
                     itemData.Load(curRow, strTableRow);
 
-                    sqlFileList.Add(itemData);
+                    itemList.Add(itemData);
                 }
             }
 
-            var jsonString = JsonConvert.SerializeObject(sqlFileList, Formatting.Indented,
+            var jsonString = JsonConvert.SerializeObject(itemList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
             
             (new FileInfo("srv_data\\item_db.json")).Directory.Create();

@@ -26,20 +26,13 @@ using rose_data.Data;
 
 namespace rose_data
 {
-    public class AiList
+    public class ZoneConverter
     {
-        public List<string> AiFileList { get; set; } = new List<string>();
-        
-        public AiList(string rootDirectory)
+        public ZoneConverter(string rootDirectory)
         {
-            const string aiStb = "FILE_AI.stb";
-            LoadAndConvert(rootDirectory + "\\3DDATA\\STB\\" + aiStb);
+            const string skillStb = "list_zone.stb";
+            LoadAndConvert(rootDirectory + "\\3DDATA\\STB\\" + skillStb );
         }
-
-        // public Motion GetById(int id)
-        // {
-        //     return AiData.Find(ai => ai.Id == id);
-        // }
 
         public void LoadAndConvert(string stbPath = null)
         {
@@ -47,7 +40,6 @@ namespace rose_data
                 return;
             
             var dataFile = new DataFile();
-
             try
             {
                 dataFile.Load(stbPath);
@@ -57,24 +49,24 @@ namespace rose_data
                 Console.WriteLine(e);
                 return;
             }
-            
+
+            List<Zone> zoneList = new List<Zone>();
             for (var i = 0; i < dataFile.RowCount; i++)
             {
-                AiFileList.Add(dataFile[i][1]);
+                var curRow = dataFile[i];
+                if (!curRow[2].Contains(".zon")) continue;
                 
-                //TODO: Load the AIP file data
-                // var ai = new Ai(i);
-                // var valid = ai.Load(dataFile[i]);
-                // if (valid) AiData.Add(ai);
-            }
-            
-            //TODO: Output the AI data in a scriptable format (LUA)
+                Console.Write("Attempting to load \"" + curRow[1] + "\" - ");
+                var zone = new Zone(i);
+                zone.Load(curRow);
 
-            var jsonString = JsonConvert.SerializeObject(AiFileList, Formatting.Indented,
+                zoneList.Add(zone);
+            }
+
+            var jsonString = JsonConvert.SerializeObject(zoneList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
-            
-            (new FileInfo("srv_data\\ai_list.json")).Directory.Create();
-            var sqlFile = new System.IO.StreamWriter("srv_data\\ai_list.json", false);
+            (new FileInfo("srv_data\\zone_data.json")).Directory.Create();
+            var sqlFile = new System.IO.StreamWriter("srv_data\\zone_data.json", false);
             using (sqlFile)
             {
                 sqlFile.WriteLine(jsonString);

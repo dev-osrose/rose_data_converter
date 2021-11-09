@@ -55,7 +55,7 @@ namespace rose_data
                 return;
             }
 
-            List<Skill> sqlFileList = new List<Skill>();
+            List<Skill> skillList = new List<Skill>();
             for (var i = 0; i < dataFile.RowCount; i++)
             {
                 StringTableRow strTableRow;
@@ -72,10 +72,10 @@ namespace rose_data
                 var skill = new Skill(i);
                 skill.Load(curRow, strTableRow);
 
-                sqlFileList.Add(skill);
+                skillList.Add(skill);
             }
 
-            var jsonString = JsonConvert.SerializeObject(sqlFileList, Formatting.Indented,
+            var jsonString = JsonConvert.SerializeObject(skillList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
             
             (new FileInfo("srv_data\\skill_db.json")).Directory.Create();

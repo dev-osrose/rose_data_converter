@@ -55,7 +55,7 @@ namespace rose_data
                 return;
             }
 
-            List<Npc> sqlFileList = new List<Npc>();
+            List<Npc> npcList = new List<Npc>();
             for (var i = 0; i < dataFile.RowCount; i++)
             {
                 StringTableRow strTableRow;
@@ -72,10 +72,10 @@ namespace rose_data
                 var npc = new Npc(i);
                 npc.Load(curRow, strTableRow);
 
-                sqlFileList.Add(npc);
+                npcList.Add(npc);
             }
 
-            var jsonString = JsonConvert.SerializeObject(sqlFileList, Formatting.Indented,
+            var jsonString = JsonConvert.SerializeObject(npcList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
             
             (new FileInfo("srv_data\\npc_db.json")).Directory.Create();
