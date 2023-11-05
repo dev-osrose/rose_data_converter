@@ -12,19 +12,26 @@ namespace rose_data
         [Option('r', "root", Required = true, HelpText = "Set 3DDATA root directory.")]
         public string Root { get; set; }
     }
+
+    public static class Config
+    {
+        public static bool Verbose { get; set; }
+        public static string RootDirectory { get; set; }
+        public static MotionList AnimationList { get; set; }
+        public static AiList AiList { get; set; }
+    }
     
     class Program
     {
 
         static void Main(string[] args)
         {
-            var StbRoot = "";
             Parser.Default.ParseArguments<Options>(args)
                 .WithParsed<Options>(o =>
                 {
                     if (o.Root.Length > 0)
                     {
-                        StbRoot = o.Root;
+                        Config.RootDirectory = o.Root;
                     }
                     
                     if (o.Verbose)
@@ -33,18 +40,18 @@ namespace rose_data
                     }
                 });
             
-            if (StbRoot.Length == 0)
+            if (Config.RootDirectory.Length == 0)
             {
                 Console.Write("Root directory required\n");
                 return;
             }
             
-            var skillConverter = new SkillConverter(StbRoot);
-            var itemConverter = new ItemConverter(StbRoot);
-            // (new FileInfo("srv_data\\npc_db.json")).Directory.Create();
-            // var npcConverter = new NpcConverter(StbRoot);
-            // (new FileInfo("srv_data\\zone_db.json")).Directory.Create();
-            // var zoneConverter = new ZoneConverter(StbRoot);
+            Config.AnimationList = new MotionList(Config.RootDirectory);
+            Config.AiList = new AiList(Config.RootDirectory);
+            var skillConverter = new SkillConverter(Config.RootDirectory);
+            var itemConverter = new ItemConverter(Config.RootDirectory);
+            var npcConverter = new NpcConverter(Config.RootDirectory);
+            var zoneConverter = new ZoneConverter(Config.RootDirectory);
             
 #if RELEASE
             Console.Write("Done extracting. Press any key to exit...\n");

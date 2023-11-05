@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Revise.STB;
 using Revise.STL;
 
@@ -6,8 +7,6 @@ namespace rose_data.Data
 {
     public class Skill
     {
-        #region Structs
-
         public struct UseAbility
         {
             public UseAbility(int type, int value) : this()
@@ -97,9 +96,16 @@ namespace rose_data.Data
             public int SoundEffect { get; set; }
         }
 
-        #endregion
-
-        #region Private Fields
+        public struct AnimationFrameTime
+        {
+            public AnimationFrameTime(float male, float female)
+            {
+                Male = male;
+                Female = female;
+            }
+            public float Male;
+            public float Female;
+        }
 
         private int _id;
         private string _skillName;
@@ -124,17 +130,14 @@ namespace rose_data.Data
         private int _actionMode;
         private int _iconNumber;
         private int _animationCasting;
-        private int _animationCastingSpeed;
+        private AnimationFrameTime _animationFrameTimeInSeconds;
+        private float _animationCastingSpeed;
         private int _animationActionType;
-        private int _animationActionSpeed;
+        private float _animationActionSpeed;
         private int _animationHitCount;
         private int _availableClassSet;
         private int _repeatAnimationCasting;
         private int _repeatAnimationCastingCount;
-
-        #endregion
-
-        #region Enums
 
         public enum SkillType
         {
@@ -184,10 +187,6 @@ namespace rose_data.Data
             Attack,
             Restore
         }
-
-        #endregion
-
-        #region Properties
 
         public int Id
         {
@@ -333,8 +332,14 @@ namespace rose_data.Data
             get => _animationCasting;
             set => _animationCasting = value;
         }
+        
+        public AnimationFrameTime AnimationFrameTimeInSeconds
+        {
+            get => _animationFrameTimeInSeconds;
+            set => _animationFrameTimeInSeconds = value;
+        }
 
-        public int AnimationCastSpeed
+        public float AnimationCastSpeed
         {
             get => _animationCastingSpeed;
             set => _animationCastingSpeed = value;
@@ -346,7 +351,7 @@ namespace rose_data.Data
             set => _animationActionType = value;
         }
 
-        public int AnimationActionSpeed
+        public float AnimationActionSpeed
         {
             get => _animationActionSpeed;
             set => _animationActionSpeed = value;
@@ -384,8 +389,6 @@ namespace rose_data.Data
         public List<RequiredStat> RequiredStats { get; set; } = new List<RequiredStat>();
         
         public List<CastingEffect> CastingEffects { get; set; } = new List<CastingEffect>();
-        
-        #endregion
 
         public Skill(int id)
         {
@@ -417,6 +420,8 @@ namespace rose_data.Data
                 if (reqType == 0) continue;
                 StatsRequiredToUse.Add(new UseAbility(reqType, reqValue));
             }
+            
+            int.TryParse(row[21], out _cooldown);
 
             for (var abilityIndex = 0; abilityIndex < 2; abilityIndex++)
             {
@@ -428,11 +433,12 @@ namespace rose_data.Data
                 StatsToBuff.Add(new IncreaseAbility(incAbility, incValue, incRate));
             }
 
-            int.TryParse(row[21], out _cooldown);
-
-            int.TryParse(row[22], out _warpZoneNumber);
-            int.TryParse(row[23], out _warpZoneXPosition);
-            int.TryParse(row[24], out _warpZoneYPosition);
+            if (_type == SkillType.Warp)
+            {
+                int.TryParse(row[22], out _warpZoneNumber);
+                int.TryParse(row[23], out _warpZoneXPosition);
+                int.TryParse(row[24], out _warpZoneYPosition);
+            }
 
             int.TryParse(row[28], out _reloadType);
             int.TryParse(row[29], out _summonPet);
@@ -476,8 +482,11 @@ namespace rose_data.Data
 
             int.TryParse(row[52], out _iconNumber);
             int.TryParse(row[53], out _animationCasting);
-            int.TryParse(row[54], out _animationCastingSpeed);
-
+            // var animation = Config.AnimationList.GetById(_animationCasting);
+            // if (animation != null)
+            //     AnimationFrameTimeInSeconds = new AnimationFrameTime(animation.Male.TotalFrameTime, animation.Female.TotalFrameTime);
+            float.TryParse(row[54], out _animationCastingSpeed);
+            _animationCastingSpeed = _animationCastingSpeed / 100f;
             int.TryParse(row[55], out _repeatAnimationCasting);
             int.TryParse(row[56], out _repeatAnimationCastingCount);
 
@@ -492,7 +501,8 @@ namespace rose_data.Data
             }
 
             int.TryParse(row[69], out _animationActionType);
-            int.TryParse(row[70], out _animationActionSpeed);
+            float.TryParse(row[70], out _animationActionSpeed);
+            _animationActionSpeed = _animationActionSpeed / 100f;
             int.TryParse(row[71], out _animationHitCount);
 
             int.TryParse(row[86], out _zulyNeededToLevelUp);

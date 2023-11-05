@@ -22,32 +22,27 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using Revise.STB;
-using Revise.STL;
 using rose_data.Data;
 
 namespace rose_data
 {
-    public class SkillConverter
+    public class ZoneConverter
     {
-        public SkillConverter(string rootDirectory)
+        public ZoneConverter(string rootDirectory)
         {
-            const string skillStb = "list_skill.stb";
-            const string skillStl = "list_skill_s.stl";
-            LoadAndConvert(rootDirectory + "\\3DDATA\\STB\\" + skillStb, rootDirectory + "\\3DDATA\\STB\\" + skillStl);
+            const string skillStb = "list_zone.stb";
+            LoadAndConvert(rootDirectory + "\\3DDATA\\STB\\" + skillStb );
         }
 
-        public void LoadAndConvert(string stbPath = null, string stlPath = null)
+        public void LoadAndConvert(string stbPath = null)
         {
-            if (stbPath == null || stlPath == null)
+            if (stbPath == null)
                 return;
-
-            var stringFile = new StringTableFile();
+            
             var dataFile = new DataFile();
-
             try
             {
                 dataFile.Load(stbPath);
-                stringFile.Load(stlPath);
             }
             catch (FileNotFoundException e)
             {
@@ -55,31 +50,23 @@ namespace rose_data
                 return;
             }
 
-            List<Skill> skillList = new List<Skill>();
+            List<Zone> zoneList = new List<Zone>();
             for (var i = 0; i < dataFile.RowCount; i++)
             {
-                StringTableRow strTableRow;
                 var curRow = dataFile[i];
-                try
-                {
-                    strTableRow = stringFile[curRow[(dataFile.ColumnCount - 1)]];
-                }
-                catch (ArgumentException)
-                {
-                    continue;
-                }
+                if (!curRow[2].Contains(".zon")) continue;
+                
+                Console.Write("Attempting to load \"" + curRow[1] + "\" - ");
+                var zone = new Zone(i);
+                zone.Load(curRow);
 
-                var skill = new Skill(i);
-                skill.Load(curRow, strTableRow);
-
-                skillList.Add(skill);
+                zoneList.Add(zone);
             }
 
-            var jsonString = JsonConvert.SerializeObject(skillList, Formatting.Indented,
+            var jsonString = JsonConvert.SerializeObject(zoneList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
-            
-            (new FileInfo("srv_data\\skill_db.json")).Directory.Create();
-            var sqlFile = new System.IO.StreamWriter("srv_data\\skill_db.json", false);
+            (new FileInfo("srv_data\\zone_data.json")).Directory.Create();
+            var sqlFile = new System.IO.StreamWriter("srv_data\\zone_data.json", false);
             using (sqlFile)
             {
                 sqlFile.WriteLine(jsonString);
