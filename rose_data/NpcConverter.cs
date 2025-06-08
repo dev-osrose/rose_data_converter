@@ -31,9 +31,9 @@ namespace rose_data
     {
         public NpcConverter(string rootDirectory)
         {
-            const string npcStb = "list_npc.stb";
-            const string npcStl = "list_npc_s.stl";
-            LoadAndConvert(rootDirectory + "\\3DDATA\\STB\\" + npcStb, rootDirectory + "\\3DDATA\\STB\\" + npcStl);
+            const string npcStb = "LIST_NPC.STB";
+            const string npcStl = "LIST_NPC_S.STL";
+            LoadAndConvert(rootDirectory + "/3DDATA/STB/" + npcStb, rootDirectory + "/3DDATA/STB/" + npcStl);
         }
 
         public void LoadAndConvert(string stbPath = null, string stlPath = null)
@@ -78,8 +78,8 @@ namespace rose_data
             var jsonString = JsonConvert.SerializeObject(npcList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
             
-            (new FileInfo("srv_data\\npc_db.json")).Directory.Create();
-            var sqlFile = new System.IO.StreamWriter("srv_data\\npc_db.json", false);
+            (new FileInfo("srv_data/npc_db.json")).Directory.Create();
+            var sqlFile = new System.IO.StreamWriter("srv_data/npc_db.json", false);
             using (sqlFile)
             {
                 sqlFile.WriteLine(jsonString);

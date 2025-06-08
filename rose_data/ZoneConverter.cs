@@ -30,8 +30,8 @@ namespace rose_data
     {
         public ZoneConverter(string rootDirectory)
         {
-            const string skillStb = "list_zone.stb";
-            LoadAndConvert(rootDirectory + "\\3DDATA\\STB\\" + skillStb );
+            const string skillStb = "LIST_ZONE.STB";
+            LoadAndConvert(rootDirectory + "/3DDATA/STB/" + skillStb );
         }
 
         public void LoadAndConvert(string stbPath = null)
@@ -64,9 +64,9 @@ namespace rose_data
             }
 
             var jsonString = JsonConvert.SerializeObject(zoneList, Formatting.Indented,
-                new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
-            (new FileInfo("srv_data\\zone_data.json")).Directory.Create();
-            var sqlFile = new System.IO.StreamWriter("srv_data\\zone_data.json", false);
+                new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.Include});
+            (new FileInfo("srv_data/zone_data.json")).Directory.Create();
+            var sqlFile = new System.IO.StreamWriter("srv_data/zone_data.json", false);
             using (sqlFile)
             {
                 sqlFile.WriteLine(jsonString);

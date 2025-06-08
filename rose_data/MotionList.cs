@@ -32,8 +32,8 @@ namespace rose_data
         
         public MotionList(string rootDirectory)
         {
-            const string motionStb = "FILE_MOTION.stb";
-            LoadAndConvert(rootDirectory + "\\3DDATA\\STB\\" + motionStb);
+            const string motionStb = "FILE_MOTION.STB";
+            LoadAndConvert(rootDirectory + "/3DDATA/STB/" + motionStb);
         }
 
         public Motion GetById(int id)
@@ -68,8 +68,8 @@ namespace rose_data
             var jsonString = JsonConvert.SerializeObject(AnimationList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
             
-            (new FileInfo("srv_data\\motion_ref.json")).Directory.Create();
-            var sqlFile = new System.IO.StreamWriter("srv_data\\motion_ref.json", false);
+            (new FileInfo("srv_data/motion_ref.json")).Directory.Create();
+            var sqlFile = new System.IO.StreamWriter("srv_data/motion_ref.json", false);
             using (sqlFile)
             {
                 sqlFile.WriteLine(jsonString);

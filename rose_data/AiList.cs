@@ -32,8 +32,8 @@ namespace rose_data
         
         public AiList(string rootDirectory)
         {
-            const string aiStb = "FILE_AI.stb";
-            LoadAndConvert(rootDirectory + "\\3DDATA\\STB\\" + aiStb);
+            const string aiStb = "FILE_AI.STB";
+            LoadAndConvert(rootDirectory + "/3DDATA/STB/" + aiStb);
         }
 
         // public Motion GetById(int id)
@@ -73,8 +73,8 @@ namespace rose_data
             var jsonString = JsonConvert.SerializeObject(AiFileList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
             
-            (new FileInfo("srv_data\\ai_list.json")).Directory.Create();
-            var sqlFile = new System.IO.StreamWriter("srv_data\\ai_list.json", false);
+            (new FileInfo("srv_data/ai_list.json")).Directory.Create();
+            var sqlFile = new System.IO.StreamWriter("srv_data/ai_list.json", false);
             using (sqlFile)
             {
                 sqlFile.WriteLine(jsonString);

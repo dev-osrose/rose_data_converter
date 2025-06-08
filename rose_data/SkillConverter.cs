@@ -31,9 +31,9 @@ namespace rose_data
     {
         public SkillConverter(string rootDirectory)
         {
-            const string skillStb = "list_skill.stb";
-            const string skillStl = "list_skill_s.stl";
-            LoadAndConvert(rootDirectory + "\\3DDATA\\STB\\" + skillStb, rootDirectory + "\\3DDATA\\STB\\" + skillStl);
+            const string skillStb = "LIST_SKILL.STB";
+            const string skillStl = "LIST_SKILL_S.STL";
+            LoadAndConvert(rootDirectory + "/3DDATA/STB/" + skillStb, rootDirectory + "/3DDATA/STB/" + skillStl);
         }
 
         public void LoadAndConvert(string stbPath = null, string stlPath = null)
@@ -78,8 +78,8 @@ namespace rose_data
             var jsonString = JsonConvert.SerializeObject(skillList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
             
-            (new FileInfo("srv_data\\skill_db.json")).Directory.Create();
-            var sqlFile = new System.IO.StreamWriter("srv_data\\skill_db.json", false);
+            (new FileInfo("srv_data/skill_db.json")).Directory.Create();
+            var sqlFile = new System.IO.StreamWriter("srv_data/skill_db.json", false);
             using (sqlFile)
             {
                 sqlFile.WriteLine(jsonString);

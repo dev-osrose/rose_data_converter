@@ -76,12 +76,39 @@ namespace rose_data.Data
             public Vector3 Position { get; set; }
         }
         
+        public class WarpPoint
+        {
+            public WarpPoint(string alias, int destinationGateId, Vector3 destination, int mapId, Vector3 minPos, Vector3 maxPos)
+            {
+                Set(alias, destinationGateId, destination, mapId, minPos, maxPos);
+            }
+
+            public void Set(string alias, int destinationGateId, Vector3 destination, int mapId, Vector3 minPos, Vector3 maxPos)
+            {
+                this.Alias = alias;
+                this.DestinationGateId = destinationGateId;
+                this.Destination = destination;
+                this.MapId = mapId;
+                this.MinPosition = minPos;
+                this.MaxPosition = maxPos;
+            }
+            
+            
+            public string Alias { get; set; }
+            public int DestinationGateId { get; set; }
+            public Vector3 Destination { get; set; }
+            public int MapId { get; set; }
+            public Vector3 MinPosition { get; set; }
+            public Vector3 MaxPosition { get; set; }
+        }
+        
         private const int PostionModifier = 100;
         public int Id { get; set; }
         
         public List<SpawnPoint> SpawnPoints { get; set; }
         public List<NpcSpawner> NpcSpawnPoints { get; set; }
         public List<MapMonsterSpawn> MobSpawnPoints { get; set; }
+        public List<WarpPoint> WarpPoints { get; set; }
 
         public Zone(int id)
         {
@@ -91,9 +118,9 @@ namespace rose_data.Data
         public bool Load(DataRow row)
         {
             var zoneName = row[1];
-            var zonePath = row[2];
+            var zonePath = row[2].ToUpper().Replace('\\', '/');
 
-            if (zonePath.Contains(".zon") == false)
+            if (zonePath.Contains(".zon", StringComparison.CurrentCultureIgnoreCase) == false)
                 return false;
 
             var directoryPath = Path.GetDirectoryName(zonePath);
@@ -102,6 +129,7 @@ namespace rose_data.Data
 
             try
             {
+                Console.Write("Attempting to load \"" + Config.RootDirectory + zonePath + "\" - ");
                 zoneFile.Load(Config.RootDirectory + zonePath);
             }
             catch (FileNotFoundException)
@@ -121,7 +149,7 @@ namespace rose_data.Data
                     mapDataFile[x, y] = new MapDataFile();
                     try
                     {
-                        mapDataFile[x, y].Load(Config.RootDirectory + directoryPath + "\\" + y + "_" + x + ".ifo");
+                        mapDataFile[x, y].Load(Config.RootDirectory + (directoryPath + "//" + y + "_" + x + ".ifo").ToUpper().Replace('\\', '/'));
                     }
                     catch (FileNotFoundException)
                     { }
@@ -132,6 +160,7 @@ namespace rose_data.Data
 
             NpcSpawnPoints = new List<NpcSpawner>();
             MobSpawnPoints = new List<MapMonsterSpawn>();
+            WarpPoints = new List<WarpPoint>();
             foreach (var ifo in mapDataFile)
             {
                 if (ifo == null) continue;
@@ -141,7 +170,7 @@ namespace rose_data.Data
 
                 ExtractNpcs(ifo);
                 ExtractMobs(ifo);
-                // ExtractWarpGates(ifo);
+                ExtractWarpGates(ifo);
             }
 
             return true;
@@ -150,7 +179,7 @@ namespace rose_data.Data
         private void ExtractSpawnPoints(ZoneFile zoneFile)
         {
             var zoneDataFile = new DataFile();
-            zoneDataFile.Load(Config.RootDirectory + "\\3DDATA\\STB\\" + "list_zone.stb");
+            zoneDataFile.Load(Config.RootDirectory + ("\\3DDATA\\STB\\" + "LIST_ZONE.STB").ToUpper().Replace('\\', '/'));
 
             var curMapRow = zoneDataFile[Id];
 
@@ -170,7 +199,7 @@ namespace rose_data.Data
             {
                 if (spawnPoint.Name.Contains("WARP")) continue;
                 
-                var destCoords = new Vector3(((spawnPoint.Position.X + 520000.00f) / 100.0f), ((spawnPoint.Position.Z + 520000.00f) / 100.0f), ((spawnPoint.Position.Y) / 100.0f));
+                var destCoords = new Vector3(((spawnPoint.Position.X + 520000.00f)), ((spawnPoint.Position.Z + 520000.00f)), ((spawnPoint.Position.Y)));
 
                 if (spawnPoint.Name.Contains("start"))
                 {
@@ -188,7 +217,7 @@ namespace rose_data.Data
             foreach (var npc in ifo.NPCs)
             {
                 var eventDataFile = new DataFile();
-                eventDataFile.Load(Config.RootDirectory + "\\3DDATA\\STB\\" + "list_event.stb");
+                eventDataFile.Load(Config.RootDirectory + ("\\3DDATA\\STB\\" + "list_event.stb").ToUpper().Replace('\\', '/'));
                 
                 int dialogId = 0;
                 for (int i = 0; i < eventDataFile.RowCount; i++)
@@ -200,7 +229,7 @@ namespace rose_data.Data
                     }
                 }
                 
-                var adjPosCoords = new Vector3(((npc.Position.X + 520000.00f) / 100.0f), ((npc.Position.Y + 520000.00f) / 100.0f), ((npc.Position.Z) / 100.0f));
+                var adjPosCoords = new Vector3(((npc.Position.X + 520000.00f)), ((npc.Position.Y + 520000.00f)), ((npc.Position.Z)));
                 NpcSpawnPoints.Add(new NpcSpawner(npc.ObjectID, dialogId, adjPosCoords));
             }
         }
@@ -209,7 +238,7 @@ namespace rose_data.Data
         {
             foreach (var mobSpawns in ifo.MonsterSpawns)
             {
-                var adjPosCoords = new Vector3(((mobSpawns.Position.X + 520000.00f) / 100.0f), ((mobSpawns.Position.Y + 520000.00f) / 100.0f), ((mobSpawns.Position.Z) / 100.0f));
+                var adjPosCoords = new Vector3(((mobSpawns.Position.X + 520000.00f)), ((mobSpawns.Position.Y + 520000.00f)), ((mobSpawns.Position.Z)));
                 mobSpawns.Position = adjPosCoords;
                 MobSpawnPoints.Add(mobSpawns);
                 // foreach (var normalMobs in mobSpawns.NormalSpawnPoints)
@@ -228,17 +257,17 @@ namespace rose_data.Data
         {
             
             var zoneDataFile = new DataFile();
-            zoneDataFile.Load(Config.RootDirectory + "\\3DDATA\\STB\\" + "list_zone.stb");
+            zoneDataFile.Load(Config.RootDirectory + ("\\3DDATA\\STB\\" + "list_zone.stb").ToUpper().Replace('\\', '/'));
 
             var warpDataFile = new DataFile();
-            warpDataFile.Load(Config.RootDirectory + "\\3DDATA\\STB\\" + "warp.stb");
+            warpDataFile.Load(Config.RootDirectory + ("\\3DDATA\\STB\\" + "warp.stb").ToUpper().Replace('\\', '/'));
             var destCoords = Vector3.Zero;
             
             var modelListFile = new ModelListFile();
-            modelListFile.Load(Config.RootDirectory + "\\3DDATA\\special\\" + "list_deco_special.zsc");
+            modelListFile.Load(Config.RootDirectory + ("\\3DDATA\\special\\" + "list_deco_special.zsc").ToUpper().Replace('\\', '/'));
 
             var modelFile = new ModelFile();
-            modelFile.Load(Config.RootDirectory + "\\3DDATA\\special\\warp_gate01\\" + "warp.zms");
+            modelFile.Load(Config.RootDirectory + ("\\3DDATA\\special\\warp_gate01\\" + "warp.zms").ToUpper().Replace('\\', '/'));
             var vertices = modelFile.Vertices;
 
             foreach (var warpGate in ifo.WarpPoints)
@@ -247,19 +276,19 @@ namespace rose_data.Data
                 if (zoneDataFile[destMapId][2].ToString().Contains(".zon"))
                 {
                     ZoneFile zoneFile = new ZoneFile();
-                    zoneFile.Load(Config.RootDirectory + zoneDataFile[destMapId][2].ToString()); // Load the zon file
+                    zoneFile.Load(Config.RootDirectory + (zoneDataFile[destMapId][2].ToString()).ToUpper().Replace('\\', '/')); // Load the zon file
 
                     foreach (var spawnPoint in zoneFile.SpawnPoints)
                     {
                         if (spawnPoint.Name != warpDataFile[warpGate.WarpID][3].ToString()) continue;
 
                         // rose is stupid and we need to do this to get the right coords
-                        destCoords = new Vector3(((spawnPoint.Position.X + 520000.00f) / 100.0f), ((spawnPoint.Position.Z + 520000.00f) / 100.0f), ((spawnPoint.Position.Y) / 100.0f));
+                        destCoords = new Vector3(((spawnPoint.Position.X + 520000.00f)), ((spawnPoint.Position.Z + 520000.00f)), ((spawnPoint.Position.Y) ));
                         break;
                     }
                 }
                 
-                var position = new Vector3(((warpGate.Position.X + 520000.00f) / 100.0f), ((warpGate.Position.Y + 520000.00f) / 100.0f), ((warpGate.Position.Z) / 100.0f));
+                var position = new Vector3(((warpGate.Position.X + 520000.00f)), ((warpGate.Position.Y + 520000.00f)), ((warpGate.Position.Z)));
 
                 var rot = Matrix4x4.CreateFromQuaternion(modelListFile.Objects[1].Parts[0].Rotation);
                 var scale = Matrix4x4.CreateScale(modelListFile.Objects[1].Parts[0].Scale);
@@ -278,18 +307,7 @@ namespace rose_data.Data
                 
                 var boundingBox = BoundingBox.FromPoints(vectorPositions);
                 
-                // warpList.Add("warp_gate(\"\", " 
-                //              + warpDataFile[warpGate.WarpID][2].ToString("G", CultureInfo.InvariantCulture) + ", "
-                //              + (destCoords.X).ToString("G", CultureInfo.InvariantCulture) + ", "
-                //              + (destCoords.Y).ToString("G", CultureInfo.InvariantCulture) + ", "
-                //              + (destCoords.Z).ToString("G", CultureInfo.InvariantCulture) + ", "
-                //              + mapId.ToString("G", CultureInfo.InvariantCulture) + ", "
-                //              + (boundingBox.Minimum.X).ToString("G", CultureInfo.InvariantCulture) + ", "
-                //              + (boundingBox.Minimum.Y).ToString("G", CultureInfo.InvariantCulture) + ", "
-                //              + (boundingBox.Minimum.Z).ToString("G", CultureInfo.InvariantCulture) + ", "
-                //              + (boundingBox.Maximum.X).ToString("G", CultureInfo.InvariantCulture) + ", "
-                //              + (boundingBox.Maximum.Y).ToString("G", CultureInfo.InvariantCulture) + ", "
-                //              + (boundingBox.Maximum.Z).ToString("G", CultureInfo.InvariantCulture) + ");\n");
+                WarpPoints.Add(new WarpPoint("", destMapId, destCoords, Id, boundingBox.Minimum, boundingBox.Maximum));
             }
         }
     }

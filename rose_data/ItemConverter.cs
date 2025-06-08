@@ -51,20 +51,20 @@ namespace rose_data
 
         public ItemConverter(string rootDirectory)
         {
-            itemDataFiles[00].set(rootDirectory + "\\3DDATA\\STB\\" + "list_faceitem.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_faceitem_s.stl");
-            itemDataFiles[01].set(rootDirectory + "\\3DDATA\\STB\\" + "list_cap.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_cap_s.stl");
-            itemDataFiles[02].set(rootDirectory + "\\3DDATA\\STB\\" + "list_body.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_body_s.stl");
-            itemDataFiles[03].set(rootDirectory + "\\3DDATA\\STB\\" + "list_arms.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_arms_s.stl");
-            itemDataFiles[04].set(rootDirectory + "\\3DDATA\\STB\\" + "list_foot.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_foot_s.stl");
-            itemDataFiles[05].set(rootDirectory + "\\3DDATA\\STB\\" + "list_back.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_back_s.stl");
-            itemDataFiles[06].set(rootDirectory + "\\3DDATA\\STB\\" + "list_jewel.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_jewel_s.stl");
-            itemDataFiles[07].set(rootDirectory + "\\3DDATA\\STB\\" + "list_weapon.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_weapon_s.stl");
-            itemDataFiles[08].set(rootDirectory + "\\3DDATA\\STB\\" + "list_subwpn.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_subwpn_s.stl");
-            itemDataFiles[09].set(rootDirectory + "\\3DDATA\\STB\\" + "list_useitem.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_useitem_s.stl");
-            itemDataFiles[10].set(rootDirectory + "\\3DDATA\\STB\\" + "list_jemitem.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_jemitem_s.stl");
-            itemDataFiles[11].set(rootDirectory + "\\3DDATA\\STB\\" + "list_natural.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_natural_s.stl");
-            itemDataFiles[12].set(rootDirectory + "\\3DDATA\\STB\\" + "list_questitem.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_questitem_s.stl");
-            itemDataFiles[13].set(rootDirectory + "\\3DDATA\\STB\\" + "list_pat.stb", rootDirectory + "\\3DDATA\\STB\\" + "list_pat_s.stl");
+            itemDataFiles[00].set(rootDirectory + "/3DDATA/STB/" + "LIST_FACEITEM.STB", rootDirectory + "/3DDATA/STB/" + "LIST_FACEITEM_S.STL");
+            itemDataFiles[01].set(rootDirectory + "/3DDATA/STB/" + "LIST_CAP.STB", rootDirectory + "/3DDATA/STB/" + "LIST_CAP_S.STL");
+            itemDataFiles[02].set(rootDirectory + "/3DDATA/STB/" + "LIST_BODY.STB", rootDirectory + "/3DDATA/STB/" + "LIST_BODY_S.STL");
+            itemDataFiles[03].set(rootDirectory + "/3DDATA/STB/" + "LIST_ARMS.STB", rootDirectory + "/3DDATA/STB/" + "LIST_ARMS_S.STL");
+            itemDataFiles[04].set(rootDirectory + "/3DDATA/STB/" + "LIST_FOOT.STB", rootDirectory + "/3DDATA/STB/" + "LIST_FOOT_S.STL");
+            itemDataFiles[05].set(rootDirectory + "/3DDATA/STB/" + "LIST_BACK.STB", rootDirectory + "/3DDATA/STB/" + "LIST_BACK_S.STL");
+            itemDataFiles[06].set(rootDirectory + "/3DDATA/STB/" + "LIST_JEWEL.STB", rootDirectory + "/3DDATA/STB/" + "LIST_JEWEL_S.STL");
+            itemDataFiles[07].set(rootDirectory + "/3DDATA/STB/" + "LIST_WEAPON.STB", rootDirectory + "/3DDATA/STB/" + "LIST_WEAPON_S.STL");
+            itemDataFiles[08].set(rootDirectory + "/3DDATA/STB/" + "LIST_SUBWPN.STB", rootDirectory + "/3DDATA/STB/" + "LIST_SUBWPN_S.STL");
+            itemDataFiles[09].set(rootDirectory + "/3DDATA/STB/" + "LIST_USEITEM.STB", rootDirectory + "/3DDATA/STB/" + "LIST_USEITEM_S.STL");
+            itemDataFiles[10].set(rootDirectory + "/3DDATA/STB/" + "LIST_JEMITEM.STB", rootDirectory + "/3DDATA/STB/" + "LIST_JEMITEM_S.STL");
+            itemDataFiles[11].set(rootDirectory + "/3DDATA/STB/" + "LIST_NATURAL.STB", rootDirectory + "/3DDATA/STB/" + "LIST_NATURAL_S.STL");
+            itemDataFiles[12].set(rootDirectory + "/3DDATA/STB/" + "LIST_QUESTITEM.STB", rootDirectory + "/3DDATA/STB/" + "LIST_QUESTITEM_S.STL");
+            itemDataFiles[13].set(rootDirectory + "/3DDATA/STB/" + "LIST_PAT.STB", rootDirectory + "/3DDATA/STB/" + "LIST_PAT_S.STL");
 
             LoadAndConvert();
         }
@@ -117,8 +117,8 @@ namespace rose_data
             var jsonString = JsonConvert.SerializeObject(itemList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
             
-            (new FileInfo("srv_data\\item_db.json")).Directory.Create();
-            var sqlFile = new System.IO.StreamWriter("srv_data\\item_db.json", false);
+            (new FileInfo("srv_data/item_db.json")).Directory.Create();
+            var sqlFile = new System.IO.StreamWriter("srv_data/item_db.json", false);
             using (sqlFile)
             {
                 sqlFile.WriteLine(jsonString);

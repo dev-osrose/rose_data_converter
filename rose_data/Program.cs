@@ -46,11 +46,17 @@ namespace rose_data
                 return;
             }
             
+            Console.WriteLine("Loading animations...");
             Config.AnimationList = new MotionList(Config.RootDirectory);
+            Console.WriteLine("Loading ai lists...");
             Config.AiList = new AiList(Config.RootDirectory);
+            Console.WriteLine("Loading skills...");
             var skillConverter = new SkillConverter(Config.RootDirectory);
+            Console.WriteLine("Loading items...");
             var itemConverter = new ItemConverter(Config.RootDirectory);
+            Console.WriteLine("Loading npcs...");
             var npcConverter = new NpcConverter(Config.RootDirectory);
+            Console.WriteLine("Loading zones...");
             var zoneConverter = new ZoneConverter(Config.RootDirectory);
             
 #if RELEASE
