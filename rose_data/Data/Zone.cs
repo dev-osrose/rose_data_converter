@@ -42,21 +42,23 @@ namespace rose_data.Data
 
         public struct NpcSpawner
         {
-            public NpcSpawner(int npcId, int dialogId, Vector3 pos) : this()
+            public NpcSpawner(int npcId, int dialogId, Vector3 pos, float angle) : this()
             {
-                Set(npcId, dialogId, pos);
+                Set(npcId, dialogId, pos, angle);
             }
             
-            public void Set(int npcId, int dialogId, Vector3 pos)
+            public void Set(int npcId, int dialogId, Vector3 pos, float angle)
             {
                 this.Id = npcId;
                 this.DialogId = dialogId;
                 this.Position = pos;
+                this.Angle = angle;
             }
             
             public int Id { get; set; }
             public int DialogId { get; set; }
             public Vector3 Position { get; set; }
+            public float Angle { get; set; }
         }
         
         public struct MobSpawner
@@ -211,6 +213,17 @@ namespace rose_data.Data
                 }
             }
         }
+        
+        private float GetAngleFromRotation(Quaternion rotation)
+        {
+            rotation = Quaternion.Normalize(rotation);
+            double w = rotation.W;
+            w = Math.Clamp(w, -1.0, 1.0);
+            double angleRadians = Math.Acos(w) * 2.0;
+            float angleDegrees = (float)(angleRadians * (180.0 / Math.PI));
+            
+            return angleDegrees;
+        }
 
         private void ExtractNpcs(MapDataFile ifo)
         {
@@ -229,8 +242,9 @@ namespace rose_data.Data
                     }
                 }
                 
+                var angle = GetAngleFromRotation(npc.Rotation);
                 var adjPosCoords = new Vector3(((npc.Position.X + 520000.00f)), ((npc.Position.Y + 520000.00f)), ((npc.Position.Z)));
-                NpcSpawnPoints.Add(new NpcSpawner(npc.ObjectID, dialogId, adjPosCoords));
+                NpcSpawnPoints.Add(new NpcSpawner(npc.ObjectID, dialogId, adjPosCoords, angle));
             }
         }
 
