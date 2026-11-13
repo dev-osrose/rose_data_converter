@@ -104,7 +104,9 @@ namespace rose_data
                     }
                     catch (ArgumentException)
                     {
-                        continue;
+                        strTableRow = null;
+                        if (i != 0)
+                            continue;
                     }
 
                     var itemData = new Item(i, typeIdx);
@@ -115,7 +117,7 @@ namespace rose_data
             }
 
             var jsonString = JsonConvert.SerializeObject(itemList, Formatting.Indented,
-                new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate});
+                new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.Populate});
             
             (new FileInfo("srv_data/item_db.json")).Directory.Create();
             var sqlFile = new System.IO.StreamWriter("srv_data/item_db.json", false);

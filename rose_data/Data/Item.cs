@@ -442,10 +442,10 @@ namespace rose_data.Data
             Type = (ItemType) type;
         }
 
-        public void Load(DataRow row, StringTableRow strTableRow)
+        public void Load(DataRow row, StringTableRow? strTableRow)
         {
-            Name = strTableRow.GetText();
-            Description = strTableRow.GetDescription();
+            Name = strTableRow?.GetText();
+            Description = strTableRow?.GetDescription();
 
             int.TryParse(row[4], out var usage);
             int.TryParse(row[5], out var type);
