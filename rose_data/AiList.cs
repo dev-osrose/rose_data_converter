@@ -33,7 +33,7 @@ namespace rose_data
         public AiList(string rootDirectory)
         {
             const string aiStb = "FILE_AI.STB";
-            LoadAndConvert(rootDirectory + "/3DDATA/STB/" + aiStb);
+            LoadAndConvert(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + aiStb));
         }
 
         // public Motion GetById(int id)

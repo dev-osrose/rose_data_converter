@@ -31,7 +31,7 @@ namespace rose_data
         public ZoneConverter(string rootDirectory)
         {
             const string skillStb = "LIST_ZONE.STB";
-            LoadAndConvert(rootDirectory + "/3DDATA/STB/" + skillStb );
+            LoadAndConvert(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + skillStb) );
         }
 
         public void LoadAndConvert(string stbPath = null)
@@ -51,17 +51,26 @@ namespace rose_data
             }
 
             List<Zone> zoneList = new List<Zone>();
+            List<int> failed = new List<int>();
             for (var i = 0; i < dataFile.RowCount; i++)
             {
                 var curRow = dataFile[i];
-                if (!curRow[2].Contains(".zon")) continue;
+                if (!curRow[2].Contains(".zon", StringComparison.OrdinalIgnoreCase)) continue;
                 
                 Console.Write("Attempting to load \"" + curRow[1] + "\" - ");
                 var zone = new Zone(i);
-                zone.Load(curRow);
+                if (!zone.Load(curRow))
+                    failed.Add(i);
 
                 zoneList.Add(zone);
             }
+
+            // A zone that did not load is still written, with nothing in it.
+            // Say so: an export full of empty zones looks like a good one.
+            if (failed.Count > 0)
+                Console.Error.WriteLine("WARNING: " + failed.Count + " of " + zoneList.Count +
+                                        " zones could not be loaded and are empty in zone_data.json: " +
+                                        string.Join(", ", failed));
 
             var jsonString = JsonConvert.SerializeObject(zoneList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.Include});

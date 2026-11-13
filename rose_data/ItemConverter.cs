@@ -51,20 +51,20 @@ namespace rose_data
 
         public ItemConverter(string rootDirectory)
         {
-            itemDataFiles[00].set(rootDirectory + "/3DDATA/STB/" + "LIST_FACEITEM.STB", rootDirectory + "/3DDATA/STB/" + "LIST_FACEITEM_S.STL");
-            itemDataFiles[01].set(rootDirectory + "/3DDATA/STB/" + "LIST_CAP.STB", rootDirectory + "/3DDATA/STB/" + "LIST_CAP_S.STL");
-            itemDataFiles[02].set(rootDirectory + "/3DDATA/STB/" + "LIST_BODY.STB", rootDirectory + "/3DDATA/STB/" + "LIST_BODY_S.STL");
-            itemDataFiles[03].set(rootDirectory + "/3DDATA/STB/" + "LIST_ARMS.STB", rootDirectory + "/3DDATA/STB/" + "LIST_ARMS_S.STL");
-            itemDataFiles[04].set(rootDirectory + "/3DDATA/STB/" + "LIST_FOOT.STB", rootDirectory + "/3DDATA/STB/" + "LIST_FOOT_S.STL");
-            itemDataFiles[05].set(rootDirectory + "/3DDATA/STB/" + "LIST_BACK.STB", rootDirectory + "/3DDATA/STB/" + "LIST_BACK_S.STL");
-            itemDataFiles[06].set(rootDirectory + "/3DDATA/STB/" + "LIST_JEWEL.STB", rootDirectory + "/3DDATA/STB/" + "LIST_JEWEL_S.STL");
-            itemDataFiles[07].set(rootDirectory + "/3DDATA/STB/" + "LIST_WEAPON.STB", rootDirectory + "/3DDATA/STB/" + "LIST_WEAPON_S.STL");
-            itemDataFiles[08].set(rootDirectory + "/3DDATA/STB/" + "LIST_SUBWPN.STB", rootDirectory + "/3DDATA/STB/" + "LIST_SUBWPN_S.STL");
-            itemDataFiles[09].set(rootDirectory + "/3DDATA/STB/" + "LIST_USEITEM.STB", rootDirectory + "/3DDATA/STB/" + "LIST_USEITEM_S.STL");
-            itemDataFiles[10].set(rootDirectory + "/3DDATA/STB/" + "LIST_JEMITEM.STB", rootDirectory + "/3DDATA/STB/" + "LIST_JEMITEM_S.STL");
-            itemDataFiles[11].set(rootDirectory + "/3DDATA/STB/" + "LIST_NATURAL.STB", rootDirectory + "/3DDATA/STB/" + "LIST_NATURAL_S.STL");
-            itemDataFiles[12].set(rootDirectory + "/3DDATA/STB/" + "LIST_QUESTITEM.STB", rootDirectory + "/3DDATA/STB/" + "LIST_QUESTITEM_S.STL");
-            itemDataFiles[13].set(rootDirectory + "/3DDATA/STB/" + "LIST_PAT.STB", rootDirectory + "/3DDATA/STB/" + "LIST_PAT_S.STL");
+            itemDataFiles[00].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_FACEITEM.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_FACEITEM_S.STL"));
+            itemDataFiles[01].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_CAP.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_CAP_S.STL"));
+            itemDataFiles[02].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_BODY.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_BODY_S.STL"));
+            itemDataFiles[03].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_ARMS.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_ARMS_S.STL"));
+            itemDataFiles[04].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_FOOT.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_FOOT_S.STL"));
+            itemDataFiles[05].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_BACK.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_BACK_S.STL"));
+            itemDataFiles[06].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_JEWEL.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_JEWEL_S.STL"));
+            itemDataFiles[07].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_WEAPON.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_WEAPON_S.STL"));
+            itemDataFiles[08].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_SUBWPN.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_SUBWPN_S.STL"));
+            itemDataFiles[09].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_USEITEM.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_USEITEM_S.STL"));
+            itemDataFiles[10].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_JEMITEM.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_JEMITEM_S.STL"));
+            itemDataFiles[11].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_NATURAL.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_NATURAL_S.STL"));
+            itemDataFiles[12].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_QUESTITEM.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_QUESTITEM_S.STL"));
+            itemDataFiles[13].set(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_PAT.STB"), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + "LIST_PAT_S.STL"));
 
             LoadAndConvert();
         }

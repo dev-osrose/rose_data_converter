@@ -33,7 +33,7 @@ namespace rose_data
         {
             const string npcStb = "LIST_NPC.STB";
             const string npcStl = "LIST_NPC_S.STL";
-            LoadAndConvert(rootDirectory + "/3DDATA/STB/" + npcStb, rootDirectory + "/3DDATA/STB/" + npcStl);
+            LoadAndConvert(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + npcStb), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + npcStl));
         }
 
         public void LoadAndConvert(string stbPath = null, string stlPath = null)

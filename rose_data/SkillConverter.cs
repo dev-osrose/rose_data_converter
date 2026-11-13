@@ -33,7 +33,7 @@ namespace rose_data
         {
             const string skillStb = "LIST_SKILL.STB";
             const string skillStl = "LIST_SKILL_S.STL";
-            LoadAndConvert(rootDirectory + "/3DDATA/STB/" + skillStb, rootDirectory + "/3DDATA/STB/" + skillStl);
+            LoadAndConvert(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + skillStb), GamePath.Resolve(rootDirectory, "3DDATA/STB/" + skillStl));
         }
 
         public void LoadAndConvert(string stbPath = null, string stlPath = null)

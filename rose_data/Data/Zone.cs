@@ -120,19 +120,22 @@ namespace rose_data.Data
         public bool Load(DataRow row)
         {
             var zoneName = row[1];
-            var zonePath = row[2].ToUpper().Replace('\\', '/');
+            // As the game names it: backslashes, any case, relative to the root.
+            var zonePath = row[2];
 
-            if (zonePath.Contains(".zon", StringComparison.CurrentCultureIgnoreCase) == false)
+            if (zonePath.Contains(".zon", StringComparison.OrdinalIgnoreCase) == false)
                 return false;
 
-            var directoryPath = Path.GetDirectoryName(zonePath);
-            var fileName = Path.GetFileNameWithoutExtension(zonePath);
+            // The directory as it is on disk. Resolved once: the zone's map
+            // blocks are looked up in it by name.
+            var zoneFilePath = GamePath.Resolve(zonePath);
+            var directoryPath = Path.GetDirectoryName(zoneFilePath);
             var zoneFile = new ZoneFile();
 
             try
             {
-                Console.Write("Attempting to load \"" + Config.RootDirectory + zonePath + "\" - ");
-                zoneFile.Load(Config.RootDirectory + zonePath);
+                Console.Write("Attempting to load \"" + zoneFilePath + "\" - ");
+                zoneFile.Load(zoneFilePath);
             }
             catch (FileNotFoundException)
             {
@@ -151,7 +154,7 @@ namespace rose_data.Data
                     mapDataFile[x, y] = new MapDataFile();
                     try
                     {
-                        mapDataFile[x, y].Load(Config.RootDirectory + (directoryPath + "//" + y + "_" + x + ".ifo").ToUpper().Replace('\\', '/'));
+                        mapDataFile[x, y].Load(GamePath.Resolve(directoryPath, y + "_" + x + ".ifo"));
                     }
                     catch (FileNotFoundException)
                     { }
@@ -181,7 +184,7 @@ namespace rose_data.Data
         private void ExtractSpawnPoints(ZoneFile zoneFile)
         {
             var zoneDataFile = new DataFile();
-            zoneDataFile.Load(Config.RootDirectory + ("\\3DDATA\\STB\\" + "LIST_ZONE.STB").ToUpper().Replace('\\', '/'));
+            zoneDataFile.Load(GamePath.Resolve("3DDATA/STB/LIST_ZONE.STB"));
 
             var curMapRow = zoneDataFile[Id];
 
@@ -230,7 +233,7 @@ namespace rose_data.Data
             foreach (var npc in ifo.NPCs)
             {
                 var eventDataFile = new DataFile();
-                eventDataFile.Load(Config.RootDirectory + ("\\3DDATA\\STB\\" + "list_event.stb").ToUpper().Replace('\\', '/'));
+                eventDataFile.Load(GamePath.Resolve("3DDATA/STB/list_event.stb"));
                 
                 int dialogId = 0;
                 for (int i = 0; i < eventDataFile.RowCount; i++)
@@ -271,26 +274,26 @@ namespace rose_data.Data
         {
             
             var zoneDataFile = new DataFile();
-            zoneDataFile.Load(Config.RootDirectory + ("\\3DDATA\\STB\\" + "list_zone.stb").ToUpper().Replace('\\', '/'));
+            zoneDataFile.Load(GamePath.Resolve("3DDATA/STB/list_zone.stb"));
 
             var warpDataFile = new DataFile();
-            warpDataFile.Load(Config.RootDirectory + ("\\3DDATA\\STB\\" + "warp.stb").ToUpper().Replace('\\', '/'));
+            warpDataFile.Load(GamePath.Resolve("3DDATA/STB/warp.stb"));
             var destCoords = Vector3.Zero;
             
             var modelListFile = new ModelListFile();
-            modelListFile.Load(Config.RootDirectory + ("\\3DDATA\\special\\" + "list_deco_special.zsc").ToUpper().Replace('\\', '/'));
+            modelListFile.Load(GamePath.Resolve("3DDATA/special/list_deco_special.zsc"));
 
             var modelFile = new ModelFile();
-            modelFile.Load(Config.RootDirectory + ("\\3DDATA\\special\\warp_gate01\\" + "warp.zms").ToUpper().Replace('\\', '/'));
+            modelFile.Load(GamePath.Resolve("3DDATA/special/warp_gate01/warp.zms"));
             var vertices = modelFile.Vertices;
 
             foreach (var warpGate in ifo.WarpPoints)
             {
                 var destMapId = int.Parse(warpDataFile[warpGate.WarpID][2]);
-                if (zoneDataFile[destMapId][2].ToString().Contains(".zon"))
+                if (zoneDataFile[destMapId][2].ToString().Contains(".zon", StringComparison.OrdinalIgnoreCase))
                 {
                     ZoneFile zoneFile = new ZoneFile();
-                    zoneFile.Load(Config.RootDirectory + (zoneDataFile[destMapId][2].ToString()).ToUpper().Replace('\\', '/')); // Load the zon file
+                    zoneFile.Load(GamePath.Resolve(zoneDataFile[destMapId][2].ToString())); // Load the zon file
 
                     foreach (var spawnPoint in zoneFile.SpawnPoints)
                     {

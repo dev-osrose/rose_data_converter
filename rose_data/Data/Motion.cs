@@ -64,12 +64,12 @@ namespace rose_data.Data
             {
                 if (maleZMOPath != "")
                 {
-                    maleZMO.Load(Config.RootDirectory + maleZMOPath);
+                    maleZMO.Load(GamePath.Resolve(maleZMOPath));
                     if (femaleZMOPath == "") 
-                        femaleZMO.Load(Config.RootDirectory + maleZMOPath);
+                        femaleZMO.Load(GamePath.Resolve(maleZMOPath));
                 }
                 if (femaleZMOPath != "") 
-                    femaleZMO.Load(Config.RootDirectory + femaleZMOPath);
+                    femaleZMO.Load(GamePath.Resolve(femaleZMOPath));
             }
             catch (FileNotFoundException)
             {

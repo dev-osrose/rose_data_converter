@@ -33,7 +33,7 @@ namespace rose_data
         public MotionList(string rootDirectory)
         {
             const string motionStb = "FILE_MOTION.STB";
-            LoadAndConvert(rootDirectory + "/3DDATA/STB/" + motionStb);
+            LoadAndConvert(GamePath.Resolve(rootDirectory, "3DDATA/STB/" + motionStb));
         }
 
         public Motion GetById(int id)
