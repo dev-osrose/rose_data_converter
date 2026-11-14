@@ -87,7 +87,7 @@ namespace rose_data.Data
         private int _useSkill;
         private int _useEffect;
         private int _useSound;
-        private int _useCooldown;
+        private int _useCooldown; // USEITME_STATUS_STB
         private int _delayTimeType;
 
         private int _delayTimeTick;
@@ -405,7 +405,11 @@ namespace rose_data.Data
             set => _useSound = value;
         }
 
-        public int UseCooldown
+        /// <summary>
+        /// Consumables: the row of status_db.json the item applies over time
+        /// (USEITME_STATUS_STB, game column 24); 0 for an instant effect.
+        /// </summary>
+        public int StatusId
         {
             get => _useCooldown;
             set => _useCooldown = value;
@@ -576,7 +580,9 @@ namespace rose_data.Data
                         int.TryParse(row[19], out _needStatValue);
                         int.TryParse(row[20], out _addStatType);
                         int.TryParse(row[21], out _addStatValue);
-                        int.TryParse(row[20], out _learnSkill);
+                        // USEITEM_SCROLL_LEARN_SKILL and _USE_SKILL are both
+                        // USEITEM_ADD_DATA_VALUE, game column 20.
+                        int.TryParse(row[21], out _learnSkill);
                         int.TryParse(row[21], out _useSkill);
 
                         // int.TryParse(row[22], out _script);

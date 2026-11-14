@@ -33,4 +33,5 @@ It reads the game's files with the dev-osrose fork of
 | `quest_db.json` | `LIST_QUESTDATA.STB`, `QUESTDATA/*.QSD` | quest scripts: per file, patterns of triggers by `Name`, each with the conditions that all have to hold and the rewards then given; `CheckNext` tries the pattern's next trigger when one fails. Every record has its `Type` (`STR_COND_`/`STR_REWD_` of the game's `IO_Quest.h`) and that structure's fields. |
 | `skill_points.json` | `LIST_SKILL_P.STB` | skill points gained on reaching a level |
 | `grade_db.json` | `LIST_GRADE.STB` | what each refine grade adds (attack, hit, defense, resistance, avoid) |
+| `status_db.json` | `LIST_STATUS.STB` | lasting states: `Type` (1 HP over time, 2 MP over time, ...), `CanDuplicate`, and `Apply`, the states each applies with its value (for potions, per second). A consumable's `StatusId` in `item_db.json` names the row it starts. |
 | `drop_db.json` | `ITEM_DROP.STB` | drop tables by drop type or zone; `Values[c]` is the game's column `c`, so its `DROPITEM_ITEMNO(row, n)` is `Values[1 + n]` |

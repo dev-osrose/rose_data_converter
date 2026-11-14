@@ -9,6 +9,11 @@ namespace rose_data
     ///   level gives (SP_LEVEL, SP_POINT).
     /// - grade_db.json (LIST_GRADE.STB): what each refine grade of an item adds
     ///   (ITEMGRADE_ATK, _HIT, _DEF, _RES, _AVOID, _GLOW_COLOR).
+    /// - status_db.json (LIST_STATUS.STB): lasting states (STATE_TYPE,
+    ///   STATE_CAN_DUPLICATED, and the two STATE_APPLY_ING_STB /
+    ///   STATE_APPLY_ABILITY_VALUE pairs). A consumable's StatusId names the
+    ///   row it applies; each pair names a state of type 1 (HP) or 2 (MP)
+    ///   and how much of the item's value it gives per second.
     /// - drop_db.json (ITEM_DROP.STB): drop tables, by drop type (npc_db.json
     ///   DropType) or zone. Values[c] is the game's column c, so its
     ///   DROPITEM_ITEMNO(row, n) is Values[1 + n].
@@ -30,6 +35,20 @@ namespace rose_data
             public int Resistance { get; set; }
             public int Avoid { get; set; }
             public int GlowColor { get; set; }
+        }
+
+        public class StatusApply
+        {
+            public int Status { get; set; }
+            public int Value { get; set; }
+        }
+
+        public class Status
+        {
+            public int Id { get; set; }
+            public int Type { get; set; }
+            public bool CanDuplicate { get; set; }
+            public List<StatusApply> Apply { get; set; }
         }
 
         public class DropTable
@@ -69,6 +88,26 @@ namespace rose_data
                     });
                 }
                 JsonOutput.Write("grade_db.json", grades);
+            }
+
+            file = JsonOutput.LoadTable(rootDirectory, "LIST_STATUS.STB");
+            if (file != null)
+            {
+                var statuses = new List<Status>();
+                for (var row = 0; row < file.RowCount; row++)
+                {
+                    var values = JsonOutput.Row(file, row);
+                    int Cell(int column) => column < values.Count ? values[column] : 0;
+                    var apply = new List<StatusApply>();
+                    for (var n = 0; n < 2; n++)
+                        if (Cell(5 + n * 2) != 0)
+                            apply.Add(new StatusApply { Status = Cell(5 + n * 2), Value = Cell(6 + n * 2) });
+                    statuses.Add(new Status
+                    {
+                        Id = row, Type = Cell(1), CanDuplicate = Cell(2) != 0, Apply = apply
+                    });
+                }
+                JsonOutput.Write("status_db.json", statuses);
             }
 
             file = JsonOutput.LoadTable(rootDirectory, "ITEM_DROP.STB");
