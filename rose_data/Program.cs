@@ -66,6 +66,8 @@ namespace rose_data
             new AiConverter(Config.AiList.AiFileList);
             Console.WriteLine("Loading skill points, grades and drop tables...");
             new TableConverter(Config.RootDirectory);
+            Console.WriteLine("Loading quest scripts...");
+            new QuestConverter(Config.RootDirectory);
             
 #if RELEASE
             Console.Write("Done extracting. Press any key to exit...\n");
