@@ -117,6 +117,18 @@ namespace rose_data.Data
         /// </summary>
         public int PartyExpA { get; set; }
         public int PartyExpB { get; set; }
+
+        /// <summary>
+        /// ZONE_PLANET_NO (game column 19): a saved revive place only counts
+        /// on a map of the same planet.
+        /// </summary>
+        public int Planet { get; set; }
+
+        /// <summary>
+        /// ZONE_SECTOR_SIZE (game column 25): the original server's sector
+        /// size here, which a shout reaches three of around the shouter.
+        /// </summary>
+        public int SectorSize { get; set; }
         
         public List<SpawnPoint> SpawnPoints { get; set; }
         public List<NpcSpawner> NpcSpawnPoints { get; set; }
@@ -204,6 +216,10 @@ namespace rose_data.Data
             int.TryParse(curMapRow[30], out var partyExpB);
             PartyExpA = partyExpA;
             PartyExpB = partyExpB;
+            int.TryParse(curMapRow[20], out var planet);
+            Planet = planet;
+            int.TryParse(curMapRow[26], out var sectorSize);
+            SectorSize = sectorSize;
 
             var reviveMap = curMapRow[32];
             double.TryParse(curMapRow[33], out var reviveX);
