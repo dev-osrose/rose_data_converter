@@ -34,4 +34,5 @@ It reads the game's files with the dev-osrose fork of
 | `skill_points.json` | `LIST_SKILL_P.STB` | skill points gained on reaching a level |
 | `grade_db.json` | `LIST_GRADE.STB` | what each refine grade adds (attack, hit, defense, resistance, avoid) |
 | `status_db.json` | `LIST_STATUS.STB` | lasting states: `Type` (1 HP over time, 2 MP over time, ...), `CanDuplicate`, and `Apply`, the states each applies with its value (for potions, per second). A consumable's `StatusId` in `item_db.json` names the row it starts. |
+| `store_db.json` | `LIST_SELL.STB` | what NPC stores sell, by sell tab (`SellTab0`..`3` of `npc_db.json`); `Values[c]` is the game's column `c`, so its `STORE_ITEM(row, n)` is `Values[2 + n]`, an item as `type * 1000 + id` |
 | `drop_db.json` | `ITEM_DROP.STB` | drop tables by drop type or zone; `Values[c]` is the game's column `c`, so its `DROPITEM_ITEMNO(row, n)` is `Values[1 + n]` |

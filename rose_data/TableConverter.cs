@@ -14,6 +14,9 @@ namespace rose_data
     ///   STATE_APPLY_ABILITY_VALUE pairs). A consumable's StatusId names the
     ///   row it applies; each pair names a state of type 1 (HP) or 2 (MP)
     ///   and how much of the item's value it gives per second.
+    /// - store_db.json (LIST_SELL.STB): what NPC stores sell, by sell tab
+    ///   (npc_db.json SellTab0..3). Values[c] is the game's column c, so its
+    ///   STORE_ITEM(row, n) is Values[2 + n], an item as type * 1000 + id.
     /// - drop_db.json (ITEM_DROP.STB): drop tables, by drop type (npc_db.json
     ///   DropType) or zone. Values[c] is the game's column c, so its
     ///   DROPITEM_ITEMNO(row, n) is Values[1 + n].
@@ -108,6 +111,15 @@ namespace rose_data
                     });
                 }
                 JsonOutput.Write("status_db.json", statuses);
+            }
+
+            file = JsonOutput.LoadTable(rootDirectory, "LIST_SELL.STB");
+            if (file != null)
+            {
+                var stores = new List<DropTable>();
+                for (var row = 0; row < file.RowCount; row++)
+                    stores.Add(new DropTable { Id = row, Values = JsonOutput.Row(file, row) });
+                JsonOutput.Write("store_db.json", stores);
             }
 
             file = JsonOutput.LoadTable(rootDirectory, "ITEM_DROP.STB");
