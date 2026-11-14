@@ -20,6 +20,11 @@ namespace rose_data
     /// - drop_db.json (ITEM_DROP.STB): drop tables, by drop type (npc_db.json
     ///   DropType) or zone. Values[c] is the game's column c, so its
     ///   DROPITEM_ITEMNO(row, n) is Values[1 + n].
+    /// - skill_table.json (LIST_SKILL.STB): every skill row, Values[c] being
+    ///   the game's column c (IO_Skill.h's SKILL_* macros).
+    /// - class_db.json (LIST_CLASS.STB): job sets that quests check a class
+    ///   against. Values[c] is the game's column c, so its
+    ///   CLASS_INCLUDE_JOB(row, n) is Values[1 + n]; a first job of 0 means any.
     /// </summary>
     public class TableConverter
     {
@@ -51,6 +56,8 @@ namespace rose_data
             public int Id { get; set; }
             public int Type { get; set; }
             public bool CanDuplicate { get; set; }
+            /// <summary>STATE_PRIFITS_LOSSES: 0 good, 1 bad, 2 never cleared.</summary>
+            public int Kind { get; set; }
             public List<StatusApply> Apply { get; set; }
         }
 
@@ -107,10 +114,21 @@ namespace rose_data
                             apply.Add(new StatusApply { Status = Cell(5 + n * 2), Value = Cell(6 + n * 2) });
                     statuses.Add(new Status
                     {
-                        Id = row, Type = Cell(1), CanDuplicate = Cell(2) != 0, Apply = apply
+                        Id = row, Type = Cell(1), CanDuplicate = Cell(2) != 0, Kind = Cell(3), Apply = apply
                     });
                 }
                 JsonOutput.Write("status_db.json", statuses);
+            }
+
+            // Every skill row, named or not (monster skills have no names), as
+            // the game's columns: Values[c] is column c of IO_Skill.h.
+            file = JsonOutput.LoadTable(rootDirectory, "LIST_SKILL.STB");
+            if (file != null)
+            {
+                var skills = new List<DropTable>();
+                for (var row = 0; row < file.RowCount; row++)
+                    skills.Add(new DropTable { Id = row, Values = JsonOutput.Row(file, row) });
+                JsonOutput.Write("skill_table.json", skills);
             }
 
             file = JsonOutput.LoadTable(rootDirectory, "LIST_SELL.STB");
@@ -120,6 +138,15 @@ namespace rose_data
                 for (var row = 0; row < file.RowCount; row++)
                     stores.Add(new DropTable { Id = row, Values = JsonOutput.Row(file, row) });
                 JsonOutput.Write("store_db.json", stores);
+            }
+
+            file = JsonOutput.LoadTable(rootDirectory, "LIST_CLASS.STB");
+            if (file != null)
+            {
+                var classes = new List<DropTable>();
+                for (var row = 0; row < file.RowCount; row++)
+                    classes.Add(new DropTable { Id = row, Values = JsonOutput.Row(file, row) });
+                JsonOutput.Write("class_db.json", classes);
             }
 
             file = JsonOutput.LoadTable(rootDirectory, "ITEM_DROP.STB");

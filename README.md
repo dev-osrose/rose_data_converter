@@ -22,7 +22,7 @@ It reads the game's files with the dev-osrose fork of
 | File | From | What |
 |---|---|---|
 | `item_db.json` | `LIST_*.STB` | every item, by `Type` and `Id`; row 0 of each table is "nothing" (bare hands, bare feet). Weapons have `MotionType`, the column of `motion_types.json` for their motions. |
-| `npc_db.json` | `LIST_NPC.STB` | NPCs and monsters: stats, speeds, `AiType` (an id of `ai_db.json`), drop columns |
+| `npc_db.json` | `LIST_NPC.STB` | NPCs and monsters: stats, speeds, `AiType` (an id of `ai_db.json`), drop columns, `DeathTrigger` (the quest trigger run when it dies) |
 | `skill_db.json` | `LIST_SKILL.STB` | skills |
 | `zone_data.json` | `LIST_ZONE.STB`, `.ZON`, `.IFO`, `WARP.STB` | per zone: NPCs, monster regen points, start/respawn points, warp gates (`WarpPoints`: the gate's box, its `WarpId` (what the client sends in `PAKCS_TELEPORT_REQ`), the destination map in `DestinationGateId` and position in `Destination`; a gate whose destination cannot be found is left out with a message) |
 | `motion_ref.json` | `FILE_MOTION.STB`, `.ZMO` | avatar motions by id: frame count, frames per second, frame events and how many of them are attack hits |
@@ -35,4 +35,6 @@ It reads the game's files with the dev-osrose fork of
 | `grade_db.json` | `LIST_GRADE.STB` | what each refine grade adds (attack, hit, defense, resistance, avoid) |
 | `status_db.json` | `LIST_STATUS.STB` | lasting states: `Type` (1 HP over time, 2 MP over time, ...), `CanDuplicate`, and `Apply`, the states each applies with its value (for potions, per second). A consumable's `StatusId` in `item_db.json` names the row it starts. |
 | `store_db.json` | `LIST_SELL.STB` | what NPC stores sell, by sell tab (`SellTab0`..`3` of `npc_db.json`); `Values[c]` is the game's column `c`, so its `STORE_ITEM(row, n)` is `Values[2 + n]`, an item as `type * 1000 + id` |
+| `class_db.json` | `LIST_CLASS.STB` | job sets quests check a class against; `Values[c]` is the game's column `c`, so its `CLASS_INCLUDE_JOB(row, n)` is `Values[1 + n]` (a first job of 0 means any job) |
+| `skill_table.json` | `LIST_SKILL.STB` | every skill row (monster skills too), `Values[c]` is the game's column `c` (`IO_Skill.h`'s `SKILL_*` macros) |
 | `drop_db.json` | `ITEM_DROP.STB` | drop tables by drop type or zone; `Values[c]` is the game's column `c`, so its `DROPITEM_ITEMNO(row, n)` is `Values[1 + n]` |

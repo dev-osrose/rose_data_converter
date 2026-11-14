@@ -54,6 +54,7 @@ namespace rose_data.Data
         
         private int _glowColor;
         private int _height;
+        private string _deathTrigger;
         private int _createEffect;
         private int _createSound;
         
@@ -313,6 +314,16 @@ namespace rose_data.Data
             set => _glowColor = value;
         }
 
+        /// <summary>
+        /// The quest trigger the client runs when this monster dies (NPC_DESC,
+        /// the game's column 41), for example "1-31". Empty when there is none.
+        /// </summary>
+        public string DeathTrigger
+        {
+            get => _deathTrigger;
+            set => _deathTrigger = value;
+        }
+
         public int Height
         {
             get => _height;
@@ -400,7 +411,9 @@ namespace rose_data.Data
             
             int.TryParse(row[39], out _questType);
             int.TryParse(row[40], out _glowColor);
-            int.TryParse(row[42], out _height);
+            // Cell n + 1 is the game's column n: 41 is the death event, 42 the height.
+            _deathTrigger = row[42];
+            int.TryParse(row[43], out _height);
             int.TryParse(row[43], out _createEffect);
             int.TryParse(row[44], out _createSound);
         }
