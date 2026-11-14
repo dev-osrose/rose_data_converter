@@ -24,7 +24,7 @@ It reads the game's files with the dev-osrose fork of
 | `item_db.json` | `LIST_*.STB` | every item, by `Type` and `Id`; row 0 of each table is "nothing" (bare hands, bare feet). Weapons have `MotionType`, the column of `motion_types.json` for their motions. |
 | `npc_db.json` | `LIST_NPC.STB` | NPCs and monsters: stats, speeds, `AiType` (an id of `ai_db.json`), drop columns |
 | `skill_db.json` | `LIST_SKILL.STB` | skills |
-| `zone_data.json` | `LIST_ZONE.STB`, `.ZON`, `.IFO` | per zone: NPCs, monster regen points, start/respawn points, warp gates |
+| `zone_data.json` | `LIST_ZONE.STB`, `.ZON`, `.IFO`, `WARP.STB` | per zone: NPCs, monster regen points, start/respawn points, warp gates (`WarpPoints`: the gate's box, its `WarpId` (what the client sends in `PAKCS_TELEPORT_REQ`), the destination map in `DestinationGateId` and position in `Destination`; a gate whose destination cannot be found is left out with a message) |
 | `motion_ref.json` | `FILE_MOTION.STB`, `.ZMO` | avatar motions by id: frame count, frames per second, frame events and how many of them are attack hits |
 | `motion_types.json` | `TYPE_MOTION.STB` | the avatar motion for an action with a weapon: `Motions[MotionType]` of the action's row (`FILE_MOTION(weapon, action)`; action 8 is attack; motion type 0 is bare hands) |
 | `npc_motions.json` | `NPC/LIST_NPC.CHR`, `.ZMO` | the motions of each NPC and monster by `Type` (Stop, Move, Attack, Hit, Die, ...), with their timing and hit frames |

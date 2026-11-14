@@ -80,8 +80,9 @@ namespace rose_data.Data
         
         public class WarpPoint
         {
-            public WarpPoint(string alias, int destinationGateId, Vector3 destination, int mapId, Vector3 minPos, Vector3 maxPos)
+            public WarpPoint(string alias, int warpId, int destinationGateId, Vector3 destination, int mapId, Vector3 minPos, Vector3 maxPos)
             {
+                WarpId = warpId;
                 Set(alias, destinationGateId, destination, mapId, minPos, maxPos);
             }
 
@@ -97,6 +98,9 @@ namespace rose_data.Data
             
             
             public string Alias { get; set; }
+            /// <summary>The row of WARP.STB the gate leads through: what the
+            /// client sends in PAKCS_TELEPORT_REQ when it walks into it.</summary>
+            public int WarpId { get; set; }
             public int DestinationGateId { get; set; }
             public Vector3 Destination { get; set; }
             public int MapId { get; set; }
@@ -278,8 +282,6 @@ namespace rose_data.Data
 
             var warpDataFile = new DataFile();
             warpDataFile.Load(GamePath.Resolve("3DDATA/STB/warp.stb"));
-            var destCoords = Vector3.Zero;
-            
             var modelListFile = new ModelListFile();
             modelListFile.Load(GamePath.Resolve("3DDATA/special/list_deco_special.zsc"));
 
@@ -289,6 +291,9 @@ namespace rose_data.Data
 
             foreach (var warpGate in ifo.WarpPoints)
             {
+                // Each gate's own destination: one that cannot be found is
+                // left out rather than given the previous gate's.
+                Vector3? destCoords = null;
                 var destMapId = int.Parse(warpDataFile[warpGate.WarpID][2]);
                 if (zoneDataFile[destMapId][2].ToString().Contains(".zon", StringComparison.OrdinalIgnoreCase))
                 {
@@ -305,6 +310,12 @@ namespace rose_data.Data
                     }
                 }
                 
+                if (destCoords == null)
+                {
+                    Console.WriteLine($"warp {warpGate.WarpID} on map {Id}: destination \"{warpDataFile[warpGate.WarpID][3]}\" on map {destMapId} not found; gate left out");
+                    continue;
+                }
+
                 var position = new Vector3(((warpGate.Position.X + 520000.00f)), ((warpGate.Position.Y + 520000.00f)), ((warpGate.Position.Z)));
 
                 var rot = Matrix4x4.CreateFromQuaternion(modelListFile.Objects[1].Parts[0].Rotation);
@@ -324,7 +335,7 @@ namespace rose_data.Data
                 
                 var boundingBox = BoundingBox.FromPoints(vectorPositions);
                 
-                WarpPoints.Add(new WarpPoint("", destMapId, destCoords, Id, boundingBox.Minimum, boundingBox.Maximum));
+                WarpPoints.Add(new WarpPoint("", warpGate.WarpID, destMapId, destCoords.Value, Id, boundingBox.Minimum, boundingBox.Maximum));
             }
         }
     }
