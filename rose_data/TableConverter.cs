@@ -10,9 +10,8 @@ namespace rose_data
     /// - grade_db.json (LIST_GRADE.STB): what each refine grade of an item adds
     ///   (ITEMGRADE_ATK, _HIT, _DEF, _RES, _AVOID, _GLOW_COLOR).
     /// - drop_db.json (ITEM_DROP.STB): drop tables, by drop type (npc_db.json
-    ///   DropType) or zone. Values[c] is column c of the table as the game
-    ///   loads it (no name column), so the game's DROPITEM_ITEMNO(row, n) is
-    ///   Values[1 + n].
+    ///   DropType) or zone. Values[c] is the game's column c, so its
+    ///   DROPITEM_ITEMNO(row, n) is Values[1 + n].
     /// </summary>
     public class TableConverter
     {
@@ -62,7 +61,7 @@ namespace rose_data
                 for (var row = 0; row < file.RowCount; row++)
                 {
                     var values = JsonOutput.Row(file, row);
-                    int Cell(int column) => column + 1 < values.Count ? values[column + 1] : 0;
+                    int Cell(int column) => column < values.Count ? values[column] : 0;
                     grades.Add(new Grade
                     {
                         Id = row, Attack = Cell(0), Hit = Cell(1), Defense = Cell(2),
@@ -72,7 +71,6 @@ namespace rose_data
                 JsonOutput.Write("grade_db.json", grades);
             }
 
-            // Loaded without a name column: Values[c] is the game's column c.
             file = JsonOutput.LoadTable(rootDirectory, "ITEM_DROP.STB");
             if (file != null)
             {

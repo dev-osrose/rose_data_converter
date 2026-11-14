@@ -22,7 +22,6 @@ namespace rose_data
             var file = JsonOutput.LoadTable(rootDirectory, "TYPE_MOTION.STB");
             if (file == null) return;
 
-            // Loaded without a name column, so the first cell is column 0.
             var actions = new List<Action>();
             for (var i = 0; i < file.RowCount; i++)
                 actions.Add(new Action { Id = i, Motions = JsonOutput.Row(file, i) });

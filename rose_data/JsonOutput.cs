@@ -42,11 +42,14 @@ namespace rose_data
             return file;
         }
 
-        /// <summary>Every cell of a table row, as integers.</summary>
+        /// <summary>
+        /// The game's columns of a table row, as integers: cell 0 is the row's
+        /// name, so the game's column c is cell c + 1.
+        /// </summary>
         public static List<int> Row(DataFile file, int row)
         {
             var values = new List<int>();
-            for (var c = 0; c < file.ColumnCount; c++)
+            for (var c = 1; c < file.ColumnCount; c++)
                 values.Add(Int(file[row][c]));
             return values;
         }

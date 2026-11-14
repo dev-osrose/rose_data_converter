@@ -26,11 +26,11 @@ It reads the game's files with the dev-osrose fork of
 | `skill_db.json` | `LIST_SKILL.STB` | skills |
 | `zone_data.json` | `LIST_ZONE.STB`, `.ZON`, `.IFO` | per zone: NPCs, monster regen points, start/respawn points, warp gates |
 | `motion_ref.json` | `FILE_MOTION.STB`, `.ZMO` | avatar motions by id: frame count, frames per second, frame events and how many of them are attack hits |
-| `motion_types.json` | `TYPE_MOTION.STB` | the avatar motion for an action with a weapon: `Motions[MotionType]` of the action's row (`FILE_MOTION(weapon, action)`; action 8 is attack) |
+| `motion_types.json` | `TYPE_MOTION.STB` | the avatar motion for an action with a weapon: `Motions[MotionType]` of the action's row (`FILE_MOTION(weapon, action)`; action 8 is attack; motion type 0 is bare hands) |
 | `npc_motions.json` | `NPC/LIST_NPC.CHR`, `.ZMO` | the motions of each NPC and monster by `Type` (Stop, Move, Attack, Hit, Die, ...), with their timing and hit frames |
 | `ai_db.json` | `FILE_AI.STB`, `AI/*.AIP` | monster AI scripts by `AiType`: per event (`Created`, `Stop`, `AttackMove`, `Damaged`, `Kill`, `Dead`) the rules tried in order, each a list of conditions and actions. Distances are in metres as in the files. |
 | `ai_list.json` | `FILE_AI.STB` | the AI file names alone, by `AiType` |
 | `quest_db.json` | `LIST_QUESTDATA.STB`, `QUESTDATA/*.QSD` | quest scripts: per file, patterns of triggers by `Name`, each with the conditions that all have to hold and the rewards then given; `CheckNext` tries the pattern's next trigger when one fails. Every record has its `Type` (`STR_COND_`/`STR_REWD_` of the game's `IO_Quest.h`) and that structure's fields. |
 | `skill_points.json` | `LIST_SKILL_P.STB` | skill points gained on reaching a level |
 | `grade_db.json` | `LIST_GRADE.STB` | what each refine grade adds (attack, hit, defense, resistance, avoid) |
-| `drop_db.json` | `ITEM_DROP.STB` | drop tables by drop type or zone; `Values[c]` is column `c` as the game loads it, so its `DROPITEM_ITEMNO(row, n)` is `Values[1 + n]` |
+| `drop_db.json` | `ITEM_DROP.STB` | drop tables by drop type or zone; `Values[c]` is the game's column `c`, so its `DROPITEM_ITEMNO(row, n)` is `Values[1 + n]` |
