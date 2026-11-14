@@ -25,6 +25,9 @@ namespace rose_data
     /// - class_db.json (LIST_CLASS.STB): job sets that quests check a class
     ///   against. Values[c] is the game's column c, so its
     ///   CLASS_INCLUDE_JOB(row, n) is Values[1 + n]; a first job of 0 means any.
+    /// - init_avatar.json (INIT_AVATAR.STB): what a new character of each race
+    ///   starts with, by race row; Values[c] is the game's column c, so
+    ///   AVATAR_STR..AVATAR_SENSE are Values[0..5] (a stat reset puts them back).
     /// </summary>
     public class TableConverter
     {
@@ -147,6 +150,15 @@ namespace rose_data
                 for (var row = 0; row < file.RowCount; row++)
                     classes.Add(new DropTable { Id = row, Values = JsonOutput.Row(file, row) });
                 JsonOutput.Write("class_db.json", classes);
+            }
+
+            file = JsonOutput.LoadTable(rootDirectory, "INIT_AVATAR.STB");
+            if (file != null)
+            {
+                var races = new List<DropTable>();
+                for (var row = 0; row < file.RowCount; row++)
+                    races.Add(new DropTable { Id = row, Values = JsonOutput.Row(file, row) });
+                JsonOutput.Write("init_avatar.json", races);
             }
 
             file = JsonOutput.LoadTable(rootDirectory, "ITEM_DROP.STB");
