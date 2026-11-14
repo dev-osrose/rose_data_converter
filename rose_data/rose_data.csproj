@@ -3,12 +3,19 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net10.0</TargetFramework>
+        <ReviseProject Condition="'$(ReviseProject)' == ''">$(MSBuildThisFileDirectory)../../raven/Revise/Revise/Revise.csproj</ReviseProject>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="CommandLineParser" Version="2.8.0" />
       <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-      <PackageReference Include="Revise" Version="1.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <!-- The dev-osrose fork of Revise (github.com/dev-osrose/Revise), which
+           reads the ZMO frame events. Expected at ~/git/raven/Revise; pass
+           -p:ReviseProject=<path to Revise.csproj> to use another checkout. -->
+      <ProjectReference Include="$(ReviseProject)" />
     </ItemGroup>
 
     <ItemGroup>
