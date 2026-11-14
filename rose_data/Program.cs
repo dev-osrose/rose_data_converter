@@ -58,6 +58,14 @@ namespace rose_data
             var npcConverter = new NpcConverter(Config.RootDirectory);
             Console.WriteLine("Loading zones...");
             var zoneConverter = new ZoneConverter(Config.RootDirectory);
+            Console.WriteLine("Loading weapon motion types...");
+            new MotionTypeConverter(Config.RootDirectory);
+            Console.WriteLine("Loading NPC motions...");
+            new NpcMotionConverter(Config.RootDirectory);
+            Console.WriteLine("Loading AI scripts...");
+            new AiConverter(Config.AiList.AiFileList);
+            Console.WriteLine("Loading skill points, grades and drop tables...");
+            new TableConverter(Config.RootDirectory);
             
 #if RELEASE
             Console.Write("Done extracting. Press any key to exit...\n");

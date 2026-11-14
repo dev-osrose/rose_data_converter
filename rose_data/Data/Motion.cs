@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Revise.STB;
 using Revise.ZMO;
@@ -23,6 +24,20 @@ namespace rose_data.Data
                 FramesPerSecond = framesPerSecond < 1 ? 1 : framesPerSecond;
                 TotalFrameTime = FrameCount / FramesPerSecond;
             }
+
+            /// <summary>Takes the length, speed and frame events of a motion.</summary>
+            public void Set(MotionFile motion)
+            {
+                Set(motion.FrameCount, motion.FramesPerSecond);
+                var timing = MotionTiming.From(motion, null);
+                AttackFrames = timing.AttackFrames;
+                Events = timing.Events;
+            }
+
+            /// <summary>Frames at which an attack lands.</summary>
+            public int AttackFrames { get; set; }
+            /// <summary>Every frame with an event, and the event.</summary>
+            public List<MotionTiming.FrameEvent> Events { get; set; }
             
             public float FrameCount { get; set; }
             public float FramesPerSecond { get; set; }
@@ -63,26 +78,25 @@ namespace rose_data.Data
             try
             {
                 if (maleZMOPath != "")
-                {
                     maleZMO.Load(GamePath.Resolve(maleZMOPath));
-                    if (femaleZMOPath == "") 
-                        femaleZMO.Load(GamePath.Resolve(maleZMOPath));
-                }
-                if (femaleZMOPath != "") 
+                // Without a motion of its own, the female uses the male one.
+                if (femaleZMOPath != "")
                     femaleZMO.Load(GamePath.Resolve(femaleZMOPath));
+                else
+                    femaleZMO = maleZMO;
             }
             catch (FileNotFoundException)
             {
             }
-            
+
             if (maleZMO.FrameCount == 0 && femaleZMO.FrameCount == 0)
                 return false;
-            
-            if (maleZMO.FrameCount > 0) 
-                _male.Set(maleZMO.FrameCount, maleZMO.FramesPerSecond);
-            
+
+            if (maleZMO.FrameCount > 0)
+                _male.Set(maleZMO);
+
             if (femaleZMO.FrameCount > 0)
-                _female.Set(femaleZMO.FrameCount, femaleZMO.FramesPerSecond);
+                _female.Set(femaleZMO);
             
             return true;
         }

@@ -246,6 +246,11 @@ namespace rose_data.Data
             set => _attack = value;
         }
 
+        /// <summary>
+        /// Weapons: column of motion_types.json naming its motions.
+        /// </summary>
+        public int MotionType { get; set; }
+
         public int AttackSpeed
         {
             get => _attackSpeed;
@@ -537,6 +542,10 @@ namespace rose_data.Data
                     {
                         int.TryParse(row[31], out _jemSlots);
                         int.TryParse(row[34], out _range);
+                        // WEAPON_MOTION_TYPE: the column of TYPE_MOTION.STB
+                        // that names this weapon's motions.
+                        int.TryParse(row[35], out var motionType);
+                        MotionType = motionType;
                         int.TryParse(row[36], out _attack);
                         int.TryParse(row[37], out _attackSpeed);
                         int.TryParse(row[38], out _isMagic);
