@@ -110,6 +110,13 @@ namespace rose_data.Data
         
         private const int PostionModifier = 100;
         public int Id { get; set; }
+
+        /// <summary>
+        /// ZONE_PARTY_EXP_A and _B (game columns 28 and 29): how a party's own
+        /// exp grows with kills on this map.
+        /// </summary>
+        public int PartyExpA { get; set; }
+        public int PartyExpB { get; set; }
         
         public List<SpawnPoint> SpawnPoints { get; set; }
         public List<NpcSpawner> NpcSpawnPoints { get; set; }
@@ -191,6 +198,12 @@ namespace rose_data.Data
             zoneDataFile.Load(GamePath.Resolve("3DDATA/STB/LIST_ZONE.STB"));
 
             var curMapRow = zoneDataFile[Id];
+
+            // Cell n + 1 is the game's column n.
+            int.TryParse(curMapRow[29], out var partyExpA);
+            int.TryParse(curMapRow[30], out var partyExpB);
+            PartyExpA = partyExpA;
+            PartyExpB = partyExpB;
 
             var reviveMap = curMapRow[32];
             double.TryParse(curMapRow[33], out var reviveX);
