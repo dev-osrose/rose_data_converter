@@ -28,6 +28,10 @@ namespace rose_data
     /// - init_avatar.json (INIT_AVATAR.STB): what a new character of each race
     ///   starts with, by race row; Values[c] is the game's column c, so
     ///   AVATAR_STR..AVATAR_SENSE are Values[0..5] (a stat reset puts them back).
+    /// - product_db.json (LIST_PRODUCT.STB): what items are made of, by an
+    ///   item's CraftingId; Values[c] is the game's column c, so
+    ///   PRODUCT_RAW_MATERIAL is Values[1] and material n's item and count
+    ///   (PRODUCT_NEED_ITEM_NO/_CNT) are Values[2 + 2n] and Values[3 + 2n].
     /// </summary>
     public class TableConverter
     {
@@ -159,6 +163,15 @@ namespace rose_data
                 for (var row = 0; row < file.RowCount; row++)
                     races.Add(new DropTable { Id = row, Values = JsonOutput.Row(file, row) });
                 JsonOutput.Write("init_avatar.json", races);
+            }
+
+            file = JsonOutput.LoadTable(rootDirectory, "LIST_PRODUCT.STB");
+            if (file != null)
+            {
+                var products = new List<DropTable>();
+                for (var row = 0; row < file.RowCount; row++)
+                    products.Add(new DropTable { Id = row, Values = JsonOutput.Row(file, row) });
+                JsonOutput.Write("product_db.json", products);
             }
 
             file = JsonOutput.LoadTable(rootDirectory, "ITEM_DROP.STB");
