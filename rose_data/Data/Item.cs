@@ -427,6 +427,28 @@ namespace rose_data.Data
             set => _delayTimeTick = value;
         }
 
+        // Ride parts (LIST_PAT, type 14). Game column c is row[c + 1].
+        /// <summary>Which ride slot it mounts in (PAT_ITEM_PART_IDX): 0 body,
+        /// 1 engine, 2 legs, 3 ability, 4 arms.</summary>
+        public int PartIndex { get; set; }
+        /// <summary>Which cart it belongs to (PAT_ITEM_PART_TYPE): 21 cart, 31
+        /// castle gear.</summary>
+        public int PartType { get; set; }
+        /// <summary>PAT_ITEM_PART_VER: a part fits a body of this version or
+        /// newer.</summary>
+        public int PartVersion { get; set; }
+        /// <summary>An engine's fuel when full (PAT_ITEM_MAX_FUEL).</summary>
+        public int MaxFuel { get; set; }
+        /// <summary>Fuel an engine uses each time (PAT_ITEM_USE_FUEL_RATE).</summary>
+        public int FuelUse { get; set; }
+        /// <summary>The cart's health this part adds (PAT_ITEM_HP).</summary>
+        public int CartHp { get; set; }
+        /// <summary>The job set (LIST_CLASS row) that may mount it
+        /// (PAT_ITEM_EQUIP_REQUIRE_CLASS).</summary>
+        public int RequiredClass { get; set; }
+        /// <summary>An ability part's kind (PAT_ITEM_ABILITY_TYPE): 1 a seat.</summary>
+        public int AbilityType { get; set; }
+
         public int GemIcon
         {
             get => _gemIcon;
@@ -621,6 +643,34 @@ namespace rose_data.Data
                     case ItemType.Natural:
                     {
                         int.TryParse(row[18], out _bulletId);
+                        break;
+                    }
+                    case ItemType.MountParts:
+                    {
+                        // LIST_PAT is not laid out as the other equipment:
+                        // what the generic columns above read here is fuel,
+                        // the part's cart and version.
+                        int Cell(int column)
+                        {
+                            try { return int.TryParse(row[column + 1], out var v) ? v : 0; }
+                            catch (ArgumentOutOfRangeException) { return 0; }
+                        }
+                        _defense = 0;
+                        _resistances = 0;
+                        _equipableJobs = 0;
+                        RequiredUnions = new List<int>();
+                        PartIndex = Cell(2);
+                        PartType = Cell(16);
+                        PartVersion = Cell(17);
+                        MaxFuel = Cell(31);
+                        FuelUse = Cell(32);
+                        _movementSpeed = Cell(33);
+                        _range = Cell(35);
+                        _attack = Cell(36);
+                        _attackSpeed = Cell(37);
+                        CartHp = Cell(67);
+                        RequiredClass = Cell(68);
+                        AbilityType = Cell(70);
                         break;
                     }
                 }

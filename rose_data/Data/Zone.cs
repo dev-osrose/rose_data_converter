@@ -119,6 +119,12 @@ namespace rose_data.Data
         public int PartyExpB { get; set; }
 
         /// <summary>
+        /// ZONE_RIDING_REFUSE_FLAG (game column 30): 1 no carts, 2 no castle
+        /// gear, 3 neither.
+        /// </summary>
+        public int RidingRefused { get; set; }
+
+        /// <summary>
         /// ZONE_PLANET_NO (game column 19): a saved revive place only counts
         /// on a map of the same planet.
         /// </summary>
@@ -216,6 +222,8 @@ namespace rose_data.Data
             int.TryParse(curMapRow[30], out var partyExpB);
             PartyExpA = partyExpA;
             PartyExpB = partyExpB;
+            int.TryParse(curMapRow[31], out var ridingRefused);
+            RidingRefused = ridingRefused;
             int.TryParse(curMapRow[20], out var planet);
             Planet = planet;
             int.TryParse(curMapRow[26], out var sectorSize);
