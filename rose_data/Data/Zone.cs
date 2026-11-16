@@ -176,6 +176,20 @@ namespace rose_data.Data
         public int DayTime { get; set; }
         public int EveningTime { get; set; }
         public int NightTime { get; set; }
+
+        /// <summary>
+        /// ZONE_PVP_STATE (game column 18): 0 none, 1 PvP, 2 PvP but not on the
+        /// party, 11 a clan house.
+        /// </summary>
+        public int PvpState { get; set; }
+
+        /// <summary>
+        /// The quest triggers a player runs on joining the zone, on killing a
+        /// player there and on being killed by one (game columns 22-24).
+        /// </summary>
+        public string JoinTrigger { get; set; }
+        public string KillTrigger { get; set; }
+        public string DeadTrigger { get; set; }
         
         public List<SpawnPoint> SpawnPoints { get; set; }
         public List<NpcSpawner> NpcSpawnPoints { get; set; }
@@ -317,6 +331,9 @@ namespace rose_data.Data
             int.TryParse(curMapRow[17], out var evening);
             int.TryParse(curMapRow[18], out var night);
             (DayCycle, MorningTime, DayTime, EveningTime, NightTime) = (dayCycle, morning, day, evening, night);
+            int.TryParse(curMapRow[19], out var pvpState);
+            PvpState = pvpState;
+            (JoinTrigger, KillTrigger, DeadTrigger) = (curMapRow[23].Trim(), curMapRow[24].Trim(), curMapRow[25].Trim());
 
             var reviveMap = curMapRow[32];
             double.TryParse(curMapRow[33], out var reviveX);
