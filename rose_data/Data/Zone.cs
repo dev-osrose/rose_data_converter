@@ -61,6 +61,22 @@ namespace rose_data.Data
             public float Angle { get; set; }
         }
         
+        /// <summary>
+        /// An event object (a map block IFO's lump 12 with a non-zero event
+        /// id): the server keeps its variables and status; the client has its
+        /// model and script. The map block (the IFO file's X and Y)
+        /// and the event id are what quest condition 012 names it by.
+        /// </summary>
+        public class EventObject
+        {
+            public int EventId { get; set; }
+            public int BlockX { get; set; }
+            public int BlockY { get; set; }
+            public Vector3 Position { get; set; }
+            public string Trigger { get; set; }
+            public string Script { get; set; }
+        }
+
         public struct MobSpawner
         {
             public MobSpawner(int dialogId, Vector3 pos) : this()
@@ -151,6 +167,7 @@ namespace rose_data.Data
         public List<NpcSpawner> NpcSpawnPoints { get; set; }
         public List<MapMonsterSpawn> MobSpawnPoints { get; set; }
         public List<WarpPoint> WarpPoints { get; set; }
+        public List<EventObject> EventObjects { get; set; }
 
         public Zone(int id)
         {
@@ -206,6 +223,7 @@ namespace rose_data.Data
             NpcSpawnPoints = new List<NpcSpawner>();
             MobSpawnPoints = new List<MapMonsterSpawn>();
             WarpPoints = new List<WarpPoint>();
+            EventObjects = new List<EventObject>();
             foreach (var ifo in mapDataFile)
             {
                 if (ifo == null) continue;
@@ -216,6 +234,19 @@ namespace rose_data.Data
                 ExtractNpcs(ifo);
                 ExtractMobs(ifo);
                 ExtractWarpGates(ifo);
+                foreach (var e in ifo.EventObjects)
+                {
+                    if (e.EventID == 0) continue;
+                    EventObjects.Add(new EventObject
+                    {
+                        EventId = e.EventID,
+                        BlockX = ifo.ZonePosition.X,
+                        BlockY = ifo.ZonePosition.Y,
+                        Position = new Vector3(e.Position.X + 520000.00f, e.Position.Y + 520000.00f, e.Position.Z),
+                        Trigger = e.FunctionName.TrimEnd('\0'),
+                        Script = e.ConversationFile.TrimEnd('\0')
+                    });
+                }
             }
 
             return true;
