@@ -77,6 +77,20 @@ namespace rose_data.Data
             public string Script { get; set; }
         }
 
+        /// <summary>
+        /// A map block's walkability, from its .MOV file: Width x Height
+        /// cells of 5 m, row after row, as base64 bytes, 0 walkable and
+        /// anything else blocked (the original server's LoadMOV).
+        /// </summary>
+        public class WalkBlock
+        {
+            public int X { get; set; }
+            public int Y { get; set; }
+            public int Width { get; set; }
+            public int Height { get; set; }
+            public string Cells { get; set; }
+        }
+
         public struct MobSpawner
         {
             public MobSpawner(int dialogId, Vector3 pos) : this()
@@ -169,6 +183,10 @@ namespace rose_data.Data
         public List<WarpPoint> WarpPoints { get; set; }
         public List<EventObject> EventObjects { get; set; }
 
+        /// <summary>Written on its own (walk_data.json), not in zone_data.json.</summary>
+        [Newtonsoft.Json.JsonIgnore]
+        public List<WalkBlock> Walk { get; } = new List<WalkBlock>();
+
         public Zone(int id)
         {
             Id = id;
@@ -215,6 +233,15 @@ namespace rose_data.Data
                     }
                     catch (FileNotFoundException)
                     { }
+                    try
+                    {
+                        var path = GamePath.Resolve(directoryPath, y + "_" + x + ".mov");
+                        // Placed by its IFO's block: without one, nowhere.
+                        if (File.Exists(path) && mapDataFile[x, y].ZonePosition.X != 0)
+                            Walk.Add(LoadWalk(path, mapDataFile[x, y].ZonePosition.X, mapDataFile[x, y].ZonePosition.Y));
+                    }
+                    catch (FileNotFoundException)
+                    { }
                 }
             }
 
@@ -250,6 +277,20 @@ namespace rose_data.Data
             }
 
             return true;
+        }
+
+        private static WalkBlock LoadWalk(string path, int blockX, int blockY)
+        {
+            var bytes = File.ReadAllBytes(path);
+            var width = BitConverter.ToInt32(bytes, 0);
+            var height = BitConverter.ToInt32(bytes, 4);
+            var cells = new byte[width * height];
+            Array.Copy(bytes, 8, cells, 0, Math.Min(cells.Length, bytes.Length - 8));
+            return new WalkBlock
+            {
+                X = blockX, Y = blockY, Width = width, Height = height,
+                Cells = Convert.ToBase64String(cells)
+            };
         }
 
         private void ExtractSpawnPoints(ZoneFile zoneFile)

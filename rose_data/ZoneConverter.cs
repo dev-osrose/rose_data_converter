@@ -72,6 +72,10 @@ namespace rose_data
                                         " zones could not be loaded and are empty in zone_data.json: " +
                                         string.Join(", ", failed));
 
+            // Each zone's map blocks' walkability, on its own: it is large.
+            var walk = zoneList.ConvertAll(z => new { z.Id, Blocks = z.Walk });
+            File.WriteAllText("srv_data/walk_data.json", JsonConvert.SerializeObject(walk));
+
             var jsonString = JsonConvert.SerializeObject(zoneList, Formatting.Indented,
                 new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.Include});
             (new FileInfo("srv_data/zone_data.json")).Directory.Create();
