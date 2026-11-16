@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -135,6 +135,17 @@ namespace rose_data.Data
         /// size here, which a shout reaches three of around the shouter.
         /// </summary>
         public int SectorSize { get; set; }
+
+        /// <summary>
+        /// ZONE_DAY_CYCLE and the starts of morning, day, evening and night
+        /// (game columns 13-17), in world ticks of 10 s: the zone's time is
+        /// the world time (within its month) modulo the cycle.
+        /// </summary>
+        public int DayCycle { get; set; }
+        public int MorningTime { get; set; }
+        public int DayTime { get; set; }
+        public int EveningTime { get; set; }
+        public int NightTime { get; set; }
         
         public List<SpawnPoint> SpawnPoints { get; set; }
         public List<NpcSpawner> NpcSpawnPoints { get; set; }
@@ -228,6 +239,12 @@ namespace rose_data.Data
             Planet = planet;
             int.TryParse(curMapRow[26], out var sectorSize);
             SectorSize = sectorSize;
+            int.TryParse(curMapRow[14], out var dayCycle);
+            int.TryParse(curMapRow[15], out var morning);
+            int.TryParse(curMapRow[16], out var day);
+            int.TryParse(curMapRow[17], out var evening);
+            int.TryParse(curMapRow[18], out var night);
+            (DayCycle, MorningTime, DayTime, EveningTime, NightTime) = (dayCycle, morning, day, evening, night);
 
             var reviveMap = curMapRow[32];
             double.TryParse(curMapRow[33], out var reviveX);

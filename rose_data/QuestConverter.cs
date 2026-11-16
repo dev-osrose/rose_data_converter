@@ -75,6 +75,20 @@ namespace rose_data
                 Console.Error.WriteLine("WARNING: " + failed.Count + " quest files could not be loaded, such as " +
                                         string.Join("; ", failed.GetRange(0, Math.Min(5, failed.Count))));
             JsonOutput.Write("quest_db.json", scripts);
+
+            // LIST_QUEST.STB: each quest's time limit (game column 1, in world
+            // ticks of 10 s); only the quests that have one.
+            var limits = JsonOutput.LoadTable(rootDirectory, "LIST_QUEST.STB");
+            if (limits != null)
+            {
+                var rows = new List<object>();
+                for (var row = 0; row < limits.RowCount; row++)
+                {
+                    int.TryParse(limits[row][2], out var limit);
+                    if (limit > 0) rows.Add(new { Id = row, TimeLimit = limit });
+                }
+                JsonOutput.Write("quest_limits.json", rows);
+            }
         }
 
         private static Dictionary<string, object> Record(QuestRecord record)
