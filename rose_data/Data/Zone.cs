@@ -366,13 +366,14 @@ namespace rose_data.Data
         
         private float GetAngleFromRotation(Quaternion rotation)
         {
-            rotation = Quaternion.Normalize(rotation);
-            double w = rotation.W;
-            w = Math.Clamp(w, -1.0, 1.0);
-            double angleRadians = Math.Acos(w) * 2.0;
-            float angleDegrees = (float)(angleRadians * (180.0 / Math.PI));
-            
-            return angleDegrees;
+            // The game's quaternionToModelDirection (zz_interface.cpp): the yaw
+            // about Z, signed. 2*acos(w) lost the sign, mirroring NPCs turned
+            // the other way. Kept in [0, 360).
+            var q = Quaternion.Normalize(rotation);
+            double yaw = Math.Atan2(2.0 * (q.W * q.Z - q.X * q.Y),
+                q.W * q.W - q.X * q.X + q.Y * q.Y - q.Z * q.Z);
+            double degrees = yaw * (180.0 / Math.PI);
+            return (float)((degrees % 360.0 + 360.0) % 360.0);
         }
 
         private void ExtractNpcs(MapDataFile ifo)
