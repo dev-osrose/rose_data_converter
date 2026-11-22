@@ -69,6 +69,8 @@ namespace rose_data
             Console.WriteLine("Loading quest scripts...");
             new QuestConverter(Config.RootDirectory);
             new StringConverter(Config.RootDirectory);
+            Console.WriteLine("Loading conversations and client scripts...");
+            new EventConverter(Config.RootDirectory);
             
 #if RELEASE
             Console.Write("Done extracting. Press any key to exit...\n");

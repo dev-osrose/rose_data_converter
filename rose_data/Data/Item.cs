@@ -86,6 +86,7 @@ namespace rose_data.Data
         private int _learnSkill;
         private int _useSkill;
         private int _useEffect;
+        private int _eventId;
         private int _useSound;
         private int _useCooldown; // USEITME_STATUS_STB
         private int _delayTimeType;
@@ -393,6 +394,13 @@ namespace rose_data.Data
 
         public string Script { get; private set; }
 
+        /// <summary>Kind 316: the LIST_EVENT row its use opens.</summary>
+        public int EventId
+        {
+            get => _eventId;
+            set => _eventId = value;
+        }
+
         public int UseEffect
         {
             get => _useEffect;
@@ -610,10 +618,10 @@ namespace rose_data.Data
                         // int.TryParse(row[22], out _script);
                         Script = row[22];
 
+                        // Game column 22: an event item's conversation
+                        // (LIST_EVENT row, see event_db.json), others' effect.
                         if (SubType == 316)
-                        {
-                            int.TryParse(row[23], out var conFileIdx); // Need to load con file and export it now?}
-                        }
+                            int.TryParse(row[23], out _eventId);
                         else
                             int.TryParse(row[23], out _useEffect);
 
